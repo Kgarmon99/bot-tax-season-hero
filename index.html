@@ -740,6 +740,198 @@
             transform: translateY(-2px);
         }
 
+        /* Learn More Panel */
+        .learn-more-panel {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 255, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .learn-more-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: var(--cyan);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .learn-more-section {
+            margin-bottom: 12px;
+        }
+
+        .learn-more-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .learn-more-label {
+            font-size: 11px;
+            color: var(--magenta);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .learn-more-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .learn-more-protip {
+            background: rgba(255, 215, 0, 0.15);
+            border-left: 3px solid var(--gold);
+            padding: 10px 12px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 8px;
+        }
+
+        .learn-more-protip .learn-more-label {
+            color: var(--gold);
+        }
+
+        .info-button {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .info-button:hover {
+            background: var(--cyan);
+            color: var(--dark);
+        }
+
+        /* What You Learned Screen */
+        .learned-screen {
+            background: var(--panel);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .learned-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .learned-list {
+            list-style: none;
+        }
+
+        .learned-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .learned-item:last-child {
+            border-bottom: none;
+        }
+
+        .learned-check {
+            width: 24px;
+            height: 24px;
+            background: rgba(74, 222, 128, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .learned-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .knowledge-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        /* Tax Glossary Screen */
+        .glossary-screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .glossary-screen.active {
+            display: flex;
+        }
+
+        .glossary-term {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .glossary-term:hover {
+            border-color: var(--cyan);
+        }
+
+        .glossary-term.unlocked {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .glossary-term.locked {
+            opacity: 0.5;
+        }
+
+        .glossary-term-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .glossary-term-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .glossary-term-icon {
+            font-size: 12px;
+            color: var(--gold);
+        }
+
+        .glossary-term-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+        }
+
         /* Progress particles */
         .particle {
             position: absolute;
@@ -909,6 +1101,10 @@
                     </div>
                 </div>
             </div>
+
+            <button class="action-button" onclick="showGlossary()" style="margin-top: 16px; background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(255,0,255,0.2));">
+                📚 TAX GLOSSARY
+            </button>
         </div>
 
         <!-- Game Screen -->
@@ -1002,8 +1198,12 @@
                 </div>
             </div>
 
-            <button class="action-button" onclick="backToMenu()">
-                CONTINUE
+            <button class="action-button" onclick="showLearnedScreen()">
+                WHAT YOU LEARNED 🎓
+            </button>
+
+            <button class="action-button" onclick="backToMenu()" style="margin-top: 8px; background: rgba(255,255,255,0.1);">
+                BACK TO MENU
             </button>
 
             <div class="moneybot-branding-footer">
@@ -1011,6 +1211,47 @@
                 <div class="moneybot-branding-text">Powered by MoneyBot</div>
                 <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px;">Learn real money skills through play</div>
             </div>
+        </div>
+
+        <!-- What You Learned Screen -->
+        <div class="screen" id="learnedScreen">
+            <div class="learned-screen">
+                <h2 class="learned-title">
+                    <span>🎓</span>
+                    What You Learned
+                </h2>
+                <ul class="learned-list" id="learnedList">
+                    <!-- Populated by JS -->
+                </ul>
+                <div class="knowledge-badge" id="knowledgeBadge">
+                    <span>🧠</span>
+                    <span id="badgeText">Tax Knowledge +3</span>
+                </div>
+            </div>
+            
+            <button class="action-button" onclick="showGlossary()">
+                VIEW TAX GLOSSARY 📚
+            </button>
+            
+            <button class="action-button" onclick="backToMenu()" style="margin-top: 8px; background: rgba(255,255,255,0.1);">
+                BACK TO MENU
+            </button>
+        </div>
+
+        <!-- Tax Glossary Screen -->
+        <div class="screen" id="glossaryScreen">
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 class="hero-title" style="font-size: 24px;">📚 Tax Glossary</h2>
+                <p class="hero-subtitle">Terms you've unlocked through play</p>
+            </div>
+            
+            <div id="glossaryList" style="flex: 1; overflow-y: auto;">
+                <!-- Populated by JS -->
+            </div>
+            
+            <button class="action-button" onclick="backToMenu()">
+                BACK TO MENU
+            </button>
         </div>
     </div>
 
@@ -1047,23 +1288,105 @@
         };
 
         // Level Data
+        const taxKnowledge = {
+            unlocked: [],
+            glossary: {
+                "W-2": {
+                    title: "W-2 Form",
+                    definition: "A tax form employers send to employees showing wages earned and taxes withheld.",
+                    whyItMatters: "You NEED this to file. It proves how much you earned and what you already paid in taxes.",
+                    realWorld: "Look for it in January/February from every employer you had last year."
+                },
+                "1099": {
+                    title: "1099 Forms",
+                    definition: "Forms for non-employee income like freelance work, interest, or investments.",
+                    whyItMatters: "The IRS gets a copy too - they KNOW about this income. Don't ignore it.",
+                    realWorld: "Freelancers, gig workers, and anyone with side income gets these."
+                },
+                "deduction": {
+                    title: "Tax Deduction",
+                    definition: "Expenses that reduce your taxable income, lowering your tax bill.",
+                    whyItMatters: "More deductions = lower income = less tax owed. But they must be LEGIT.",
+                    realWorld: "Keep receipts! The IRS can ask for proof up to 3 years later."
+                },
+                "withholding": {
+                    title: "Tax Withholding",
+                    definition: "Money taken from each paycheck for taxes before you get paid.",
+                    whyItMatters: "Too much = big refund (you gave IRS an interest-free loan). Too little = you owe.",
+                    realWorld: "Adjust your W-4 if your refund is huge or you owe a lot."
+                },
+                "audit": {
+                    title: "IRS Audit",
+                    definition: "When the IRS reviews your tax return more closely for errors or fraud.",
+                    whyItMatters: "Audits are stressful and can result in owing more money plus penalties.",
+                    realWorld: "Red flags: round numbers, home office claims, huge charitable donations vs income."
+                },
+                "selfemployment": {
+                    title: "Self-Employment Tax",
+                    definition: "Extra 15.3% tax on 1099 income covering Social Security and Medicare.",
+                    whyItMatters: "Employees split this with employers. Self-employed? You pay all of it.",
+                    realWorld: "Set aside 25-30% of 1099 income for taxes. Seriously."
+                },
+                "mileage": {
+                    title: "Mileage Deduction",
+                    definition: "Deducting business driving at a standard rate (67¢/mile in 2024).",
+                    whyItMatters: "Driving for work adds up fast. This deduction can save hundreds.",
+                    realWorld: "Track every mile with an app. Estimates don't work if audited."
+                },
+                "crypto": {
+                    title: "Crypto Taxes",
+                    definition: "Cryptocurrency is treated as property - gains/losses are taxable events.",
+                    whyItMatters: "Every trade, sale, or crypto payment is a taxable event. The IRS knows.",
+                    realWorld: "Use CoinTracker or similar to track. Exchanges now report to IRS."
+                }
+            }
+        };
+
         const levels = {
             1: {
                 client: {
                     name: "Alex Rivera",
                     job: "Lifeguard",
                     avatar: "🏊",
-                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld for federal taxes. First time filing! No other income or complications."
+                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld for federal taxes. First time filing! No other income or complications.",
+                    learningGoal: "Learn what a W-2 is and why first-time filers often get refunds."
                 },
                 documents: [
-                    { id: "w2", name: "W-2 Form", icon: "📄", desc: "Wages from pool job" },
-                    { id: "1099", name: "1099-NEC", icon: "📋", desc: "Contractor income", fake: true }
+                    { 
+                        id: "w2", 
+                        name: "W-2 Form", 
+                        icon: "📄", 
+                        desc: "Wages from pool job",
+                        learnMore: {
+                            what: "A W-2 shows your total wages and how much tax your employer already paid for you.",
+                            boxes: "Box 1 = total wages. Box 2 = federal tax withheld. These are the important ones!",
+                            studentContext: "Summer jobs, part-time work, internships - if you're an employee, you get a W-2."
+                        }
+                    },
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC", 
+                        icon: "📋", 
+                        desc: "Contractor income", 
+                        fake: true,
+                        learnMore: {
+                            what: "1099-NEC is for independent contractors, not employees.",
+                            whyFake: "Alex was a lifeguard (employee), not a contractor. He got a W-2, not a 1099.",
+                            keyDifference: "Employees get W-2s. Contractors get 1099s. The difference matters for taxes owed."
+                        }
+                    }
                 ],
                 deductions: [],
                 correctDocs: ["w2"],
                 tips: [
                     "First time filing? You probably don't owe anything if you made under $13,850!",
                     "W-2 means you're an employee. Your employer already withheld taxes for you."
+                ],
+                learned: [
+                    "W-2 forms show wages from employer jobs",
+                    "If you made under $13,850 as a dependent, you likely owe $0 federal tax",
+                    "Withholding is money taken from paychecks for taxes throughout the year",
+                    "First-time filers often get refunds because they overpaid"
                 ],
                 baseRefund: 350,
                 timeLimit: 60
@@ -1073,18 +1396,96 @@
                     name: "Jordan Chen",
                     job: "Barista + Photographer",
                     avatar: "☕",
-                    story: "Jordan worked part-time at a coffee shop (W-2: $8,500) AND did freelance photography on weekends (1099: $3,200). Bought a $1,200 camera for the photo business and drove 400 miles for shoots."
+                    story: "Jordan worked part-time at a coffee shop (W-2: $8,500) AND did freelance photography on weekends (1099: $3,200). Bought a $1,200 camera for the photo business and drove 400 miles for shoots.",
+                    learningGoal: "Understand self-employment income and legitimate business deductions."
                 },
                 documents: [
-                    { id: "w2", name: "W-2 Coffee Shop", icon: "☕", desc: "$8,500 wages" },
-                    { id: "1099", name: "1099-NEC Photo", icon: "📷", desc: "$3,200 freelance" },
-                    { id: "fake1", name: "1099-DIV", icon: "📊", desc: "Investment income", fake: true }
+                    { 
+                        id: "w2", 
+                        name: "W-2 Coffee Shop", 
+                        icon: "☕", 
+                        desc: "$8,500 wages",
+                        learnMore: {
+                            what: "Jordan's employee wages from the coffee shop.",
+                            taxImpact: "Employer already withheld taxes. Jordan may owe more because of the 1099 income.",
+                            proTip: "Having both W-2 and 1099 income is common for side hustlers."
+                        }
+                    },
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC Photo", 
+                        icon: "📷", 
+                        desc: "$3,200 freelance",
+                        learnMore: {
+                            what: "Income from photography clients who paid Jordan as a contractor.",
+                            taxImpact: "No taxes were withheld. Jordan owes income tax PLUS 15.3% self-employment tax.",
+                            proTip: "Set aside 25-30% of all 1099 income for taxes!"
+                        }
+                    },
+                    { 
+                        id: "fake1", 
+                        name: "1099-DIV", 
+                        icon: "📊", 
+                        desc: "Investment income", 
+                        fake: true,
+                        learnMore: {
+                            what: "1099-DIV reports dividends from stocks or investments.",
+                            whyFake: "Jordan has no investment account. Don't file forms you don't have!",
+                            proTip: "Only file forms that were actually sent to you AND the IRS."
+                        }
+                    }
                 ],
                 deductions: [
-                    { id: "camera", name: "Camera Equipment", desc: "Business equipment over $600", amount: 1200, legit: true },
-                    { id: "miles", name: "Mileage Deduction", desc: "400 miles @ $0.67/mile", amount: 268, legit: true },
-                    { id: "coffee", name: "Daily Coffee", desc: "Personal expense", amount: 450, legit: false, auditRisk: "Personal expenses aren't deductible!" },
-                    { id: "clothes", name: "Work Clothes", desc: "Regular clothing", amount: 200, legit: false, auditRisk: "Unless required uniform, not deductible!" }
+                    { 
+                        id: "camera", 
+                        name: "Camera Equipment", 
+                        desc: "Business equipment over $600", 
+                        amount: 1200, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Camera used exclusively for photography business. Equipment over $600 is a legitimate business expense.",
+                            irsRules: "Business equipment can be deducted in full OR depreciated over several years.",
+                            documentation: "Keep the receipt! The IRS can ask for proof up to 3 years later."
+                        }
+                    },
+                    { 
+                        id: "miles", 
+                        name: "Mileage Deduction", 
+                        desc: "400 miles @ $0.67/mile", 
+                        amount: 268, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Driving to photo shoots is business mileage. Personal commuting doesn't count.",
+                            irsRules: "Standard mileage rate changes yearly (67¢/mile in 2024).",
+                            documentation: "Track every trip: date, destination, purpose, miles. Apps make this easy."
+                        }
+                    },
+                    { 
+                        id: "coffee", 
+                        name: "Daily Coffee", 
+                        desc: "Personal expense", 
+                        amount: 450, 
+                        legit: false, 
+                        auditRisk: "Personal expenses aren't deductible!",
+                        learnMore: {
+                            whyInvalid: "Daily coffee is a personal expense, even if you drink it while working.",
+                            exception: "Coffee for clients during business meetings IS deductible (50% only).",
+                            auditRisk: "Claiming personal expenses is a fast track to an audit."
+                        }
+                    },
+                    { 
+                        id: "clothes", 
+                        name: "Work Clothes", 
+                        desc: "Regular clothing", 
+                        amount: 200, 
+                        legit: false, 
+                        auditRisk: "Unless required uniform, not deductible!",
+                        learnMore: {
+                            whyInvalid: "Regular clothes you could wear outside work aren't deductible.",
+                            exception: "Required uniforms with company logo OR specialized safety gear IS deductible.",
+                            realWorld: "A photographer's normal clothes? Not deductible. A branded vest? Maybe."
+                        }
+                    }
                 ],
                 correctDocs: ["w2", "1099"],
                 correctDeductions: ["camera", "miles"],
@@ -1092,6 +1493,14 @@
                     "1099 income means you're self-employed - you can deduct business expenses!",
                     "Keep receipts for anything over $75. The IRS loves documentation.",
                     "Home office deduction? Only if it's used EXCLUSIVELY for business."
+                ],
+                learned: [
+                    "1099 income has NO tax withheld - you owe it all at tax time",
+                    "Self-employment tax is 15.3% on top of income tax",
+                    "Business equipment used exclusively for work is deductible",
+                    "Mileage for business trips is deductible (not commuting)",
+                    "Personal expenses are NEVER deductible",
+                    "Regular work clothes aren't deductible - uniforms with logos are"
                 ],
                 baseRefund: 0,
                 timeLimit: 90
@@ -1101,21 +1510,130 @@
                     name: "Sam Torres",
                     job: "Gig Worker + Trader",
                     avatar: "🚗",
-                    story: "Sam drives Uber ($18,000), delivers DoorDash ($8,500), trades crypto (lost $2,000), and tutors online ($4,200). Has vehicle expenses, phone bills, and wants to claim home office. Complex situation!"
+                    story: "Sam drives Uber ($18,000), delivers DoorDash ($8,500), trades crypto (lost $2,000), and tutors online ($4,200). Has vehicle expenses, phone bills, and wants to claim home office. Complex situation!",
+                    learningGoal: "Master multiple income streams, crypto taxes, and avoid audit red flags."
                 },
                 documents: [
-                    { id: "uber", name: "1099-K Uber", icon: "🚗", desc: "$18,000 rideshare" },
-                    { id: "doordash", name: "1099-NEC DD", icon: "🍔", desc: "$8,500 delivery" },
-                    { id: "tutor", name: "1099-NEC Tutor", icon: "📚", desc: "$4,200 tutoring" },
-                    { id: "crypto", name: "1099-B Crypto", icon: "₿", desc: "Trading activity" }
+                    { 
+                        id: "uber", 
+                        name: "1099-K Uber", 
+                        icon: "🚗", 
+                        desc: "$18,000 rideshare",
+                        learnMore: {
+                            what: "Payment card/third-party network income. Rideshare and delivery apps use this.",
+                            taxImpact: "Gross payments reported - you deduct expenses to show actual profit.",
+                            proTip: "1099-K reports TOTAL payments including fees. Don't panic at the big number!"
+                        }
+                    },
+                    { 
+                        id: "doordash", 
+                        name: "1099-NEC DD", 
+                        icon: "🍔", 
+                        desc: "$8,500 delivery",
+                        learnMore: {
+                            what: "Non-employee compensation from delivery work.",
+                            taxImpact: "Combined with Uber income, Sam owes significant self-employment tax.",
+                            proTip: "Multiple gig apps = multiple 1099s. Track income from each separately."
+                        }
+                    },
+                    { 
+                        id: "tutor", 
+                        name: "1099-NEC Tutor", 
+                        icon: "📚", 
+                        desc: "$4,200 tutoring",
+                        learnMore: {
+                            what: "Online tutoring income. Another 1099 because Sam is an independent contractor.",
+                            taxImpact: "More self-employment income. The home office deduction makes sense here.",
+                            proTip: "Having multiple income streams is great - just track them all!"
+                        }
+                    },
+                    { 
+                        id: "crypto", 
+                        name: "1099-B Crypto", 
+                        icon: "₿", 
+                        desc: "Trading activity",
+                        learnMore: {
+                            what: "Broker reports crypto sales and trades to the IRS.",
+                            taxImpact: "Crypto is property, not currency. Every trade is a taxable event.",
+                            proTip: "Losses can offset gains AND up to $3,000 of other income. Silver lining!"
+                        }
+                    }
                 ],
                 deductions: [
-                    { id: "vehicle", name: "Vehicle Expenses", desc: "Standard mileage or actual costs", amount: 4200, legit: true },
-                    { id: "phone", name: "Phone & Internet", desc: "Business percentage (60%)", amount: 720, legit: true },
-                    { id: "homeoffice", name: "Home Office", desc: "20% of home expenses", amount: 2400, legit: true },
-                    { id: "crypto", name: "Crypto Losses", desc: "Up to $3,000 deductible", amount: 2000, legit: true },
-                    { id: "meals", name: "All Meals", desc: "Only 50% of business meals", amount: 1800, legit: false, auditRisk: "Only business meals are deductible, and only 50%!" },
-                    { id: "personal", name: "Personal Deduction", desc: "Questionable write-off", amount: 5000, legit: false, auditRisk: "This would definitely trigger an audit!" }
+                    { 
+                        id: "vehicle", 
+                        name: "Vehicle Expenses", 
+                        desc: "Standard mileage or actual costs", 
+                        amount: 4200, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Uber and DoorDash require driving. Vehicle costs are a major business expense.",
+                            twoMethods: "Standard mileage (67¢/mile) OR actual expenses (gas, insurance, maintenance, depreciation).",
+                            proTip: "Track both all year, then choose whichever gives the bigger deduction!"
+                        }
+                    },
+                    { 
+                        id: "phone", 
+                        name: "Phone & Internet", 
+                        desc: "Business percentage (60%)", 
+                        amount: 720, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Gig apps require phone. Tutoring requires internet. Business use is deductible.",
+                            irsRules: "Deduct the business percentage (track actual usage for a sample week).",
+                            proTip: "60% is reasonable if you use phone mainly for gig work. Document your reasoning."
+                        }
+                    },
+                    { 
+                        id: "homeoffice", 
+                        name: "Home Office", 
+                        desc: "20% of home expenses", 
+                        amount: 2400, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Online tutoring requires a dedicated workspace. Sam has a separate room used only for this.",
+                            irsRules: "Must be REGULAR and EXCLUSIVE use for business. No personal use allowed.",
+                            auditRisk: "This is a major audit trigger. Only claim if you legitimately qualify!"
+                        }
+                    },
+                    { 
+                        id: "crypto", 
+                        name: "Crypto Losses", 
+                        desc: "Up to $3,000 deductible", 
+                        amount: 2000, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Crypto losses are real capital losses. You can deduct them just like stock losses.",
+                            taxStrategy: "Up to $3,000 can offset ordinary income. Excess carries forward to next year.",
+                            proTip: "Tax-loss harvesting: sell losers to offset gains and reduce your tax bill."
+                        }
+                    },
+                    { 
+                        id: "meals", 
+                        name: "All Meals", 
+                        desc: "Only 50% of business meals", 
+                        amount: 1800, 
+                        legit: false, 
+                        auditRisk: "Only business meals are deductible, and only 50%!",
+                        learnMore: {
+                            whyInvalid: "Sam wants to deduct ALL meals. Only BUSINESS meals qualify, and only 50%.",
+                            irsRules: "Business meals require: business purpose, receipt, not lavish, you or employee present.",
+                            auditRisk: "Meals are heavily scrutinized. Personal meals are NEVER deductible."
+                        }
+                    },
+                    { 
+                        id: "personal", 
+                        name: "Personal Deduction", 
+                        desc: "Questionable write-off", 
+                        amount: 5000, 
+                        legit: false, 
+                        auditRisk: "This would definitely trigger an audit!",
+                        learnMore: {
+                            whyInvalid: "Vague 'personal deduction' with no business purpose is straight-up tax fraud.",
+                            consequences: "IRS penalties: 20% accuracy penalty + interest. Possible criminal charges.",
+                            realWorld: "If it sounds too good to be true, it is. Legitimate deductions have clear business purposes."
+                        }
+                    }
                 ],
                 correctDocs: ["uber", "doordash", "tutor", "crypto"],
                 correctDeductions: ["vehicle", "phone", "homeoffice", "crypto"],
@@ -1124,6 +1642,15 @@
                     "Crypto losses can offset gains AND up to $3,000 of regular income.",
                     "Track mileage EVERY day. Estimates don't fly with the IRS.",
                     "Home office must be regular AND exclusive use to qualify."
+                ],
+                learned: [
+                    "Multiple gig apps = multiple 1099s to track",
+                    "1099-K reports gross payments, not profit",
+                    "Vehicle expenses: choose standard mileage OR actual expenses",
+                    "Home office deduction is powerful but heavily audited",
+                    "Crypto is taxed as property - every trade is a taxable event",
+                    "Capital losses can offset gains and up to $3,000 of income",
+                    "Questionable deductions can trigger penalties and interest"
                 ],
                 baseRefund: 0,
                 timeLimit: 120
@@ -1145,6 +1672,12 @@
                 gameState.completedLevels = data.completedLevels || [];
             }
             document.getElementById('totalScore').textContent = gameState.totalScore;
+            
+            // Load glossary progress
+            const glossarySaved = localStorage.getItem('taxHeroGlossary');
+            if (glossarySaved) {
+                taxKnowledge.unlocked = JSON.parse(glossarySaved);
+            }
         }
 
         function saveProgress() {
@@ -1204,6 +1737,8 @@
             const docsGrid = document.getElementById('documentsGrid');
             docsGrid.innerHTML = '';
             data.documents.forEach(doc => {
+                const wrapper = document.createElement('div');
+                
                 const card = document.createElement('div');
                 card.className = 'document-card';
                 card.dataset.docId = doc.id;
@@ -1212,7 +1747,24 @@
                     <div class="document-name">${doc.name}</div>
                 `;
                 card.onclick = () => toggleDocument(doc.id, card);
-                docsGrid.appendChild(card);
+                
+                wrapper.appendChild(card);
+                
+                // Add Learn More button if available
+                if (doc.learnMore) {
+                    const infoBtn = document.createElement('button');
+                    infoBtn.className = 'info-button';
+                    infoBtn.textContent = 'Learn More';
+                    infoBtn.style.marginTop = '8px';
+                    infoBtn.style.width = '100%';
+                    infoBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        showLearnMore('doc', doc.id, wrapper);
+                    };
+                    wrapper.appendChild(infoBtn);
+                }
+                
+                docsGrid.appendChild(wrapper);
             });
             
             // Deductions
@@ -1223,6 +1775,8 @@
                 deducSection.style.display = 'block';
                 deducList.innerHTML = '';
                 data.deductions.forEach(ded => {
+                    const wrapper = document.createElement('div');
+                    
                     const item = document.createElement('div');
                     item.className = 'deduction-item' + (ded.auditRisk ? ' audit-risk' : '');
                     item.dataset.dedId = ded.id;
@@ -1236,7 +1790,24 @@
                         <div class="deduction-amount">$${ded.amount.toLocaleString()}</div>
                     `;
                     item.onclick = () => toggleDeduction(ded.id, item);
-                    deducList.appendChild(item);
+                    
+                    wrapper.appendChild(item);
+                    
+                    // Add Learn More button if available
+                    if (ded.learnMore) {
+                        const infoBtn = document.createElement('button');
+                        infoBtn.className = 'info-button';
+                        infoBtn.textContent = 'Learn More';
+                        infoBtn.style.marginTop = '6px';
+                        infoBtn.style.width = '100%';
+                        infoBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            showLearnMore('deduction', ded.id, wrapper);
+                        };
+                        wrapper.appendChild(infoBtn);
+                    }
+                    
+                    deducList.appendChild(wrapper);
                 });
             } else {
                 deducSection.style.display = 'none';
@@ -1463,6 +2034,146 @@
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
+        }
+
+        // Educational Functions
+        function showLearnMore(type, id, element) {
+            const data = gameState.levelData;
+            let item, content;
+            
+            if (type === 'doc') {
+                item = data.documents.find(d => d.id === id);
+            } else {
+                item = data.deductions.find(d => d.id === id);
+            }
+            
+            if (!item || !item.learnMore) return;
+            
+            // Remove existing learn more panels
+            const existing = element.parentElement.querySelector('.learn-more-panel');
+            if (existing) {
+                existing.remove();
+                return;
+            }
+            
+            const panel = document.createElement('div');
+            panel.className = 'learn-more-panel';
+            
+            const lm = item.learnMore;
+            let html = '<div class="learn-more-header">💡 Learn More</div>';
+            
+            if (lm.what) {
+                html += `<div class="learn-more-section"><div class="learn-more-label">What it is:</div><div class="learn-more-text">${lm.what}</div></div>`;
+            }
+            if (lm.taxImpact || lm.whyValid || lm.whyInvalid) {
+                const label = lm.taxImpact ? 'Tax Impact:' : (lm.whyValid ? 'Why it counts:' : 'Why it doesn\'t count:');
+                const text = lm.taxImpact || lm.whyValid || lm.whyInvalid;
+                html += `<div class="learn-more-section"><div class="learn-more-label">${label}</div><div class="learn-more-text">${text}</div></div>`;
+            }
+            if (lm.irsRules || lm.consequences) {
+                const text = lm.irsRules || lm.consequences;
+                html += `<div class="learn-more-section"><div class="learn-more-label">${lm.consequences ? 'Consequences:' : 'IRS Rules:'}</div><div class="learn-more-text">${text}</div></div>`;
+            }
+            if (lm.proTip || lm.realWorld) {
+                const text = lm.proTip || lm.realWorld;
+                html += `<div class="learn-more-protip"><div class="learn-more-label">💰 Pro Tip</div><div class="learn-more-text">${text}</div></div>`;
+            }
+            if (lm.keyDifference || lm.documentation || lm.exception) {
+                const text = lm.keyDifference || lm.documentation || lm.exception;
+                html += `<div class="learn-more-section"><div class="learn-more-label">Good to know:</div><div class="learn-more-text">${text}</div></div>`;
+            }
+            
+            panel.innerHTML = html;
+            element.parentElement.insertBefore(panel, element.nextSibling);
+        }
+
+        function showLearnedScreen() {
+            const data = gameState.levelData;
+            const list = document.getElementById('learnedList');
+            list.innerHTML = '';
+            
+            if (data.learned) {
+                data.learned.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'learned-item';
+                    li.innerHTML = `
+                        <div class="learned-check">✓</div>
+                        <div class="learned-text">${item}</div>
+                    `;
+                    list.appendChild(li);
+                });
+            }
+            
+            // Unlock glossary terms based on level
+            const termsToUnlock = {
+                1: ['W-2', 'withholding'],
+                2: ['1099', 'deduction', 'selfemployment', 'mileage'],
+                3: ['audit', 'crypto']
+            };
+            
+            const newTerms = termsToUnlock[gameState.currentLevel] || [];
+            let unlockedCount = 0;
+            newTerms.forEach(term => {
+                if (!taxKnowledge.unlocked.includes(term)) {
+                    taxKnowledge.unlocked.push(term);
+                    unlockedCount++;
+                }
+            });
+            
+            document.getElementById('badgeText').textContent = `Tax Knowledge +${data.learned ? data.learned.length : 0}`;
+            
+            // Save glossary progress
+            localStorage.setItem('taxHeroGlossary', JSON.stringify(taxKnowledge.unlocked));
+            
+            showScreen('learnedScreen');
+        }
+
+        function showGlossary() {
+            const list = document.getElementById('glossaryList');
+            list.innerHTML = '';
+            
+            // Load unlocked terms
+            const saved = localStorage.getItem('taxHeroGlossary');
+            if (saved) {
+                taxKnowledge.unlocked = JSON.parse(saved);
+            }
+            
+            Object.entries(taxKnowledge.glossary).forEach(([key, term]) => {
+                const isUnlocked = taxKnowledge.unlocked.includes(key);
+                const card = document.createElement('div');
+                card.className = 'glossary-term ' + (isUnlocked ? 'unlocked' : 'locked');
+                
+                if (isUnlocked) {
+                    card.innerHTML = `
+                        <div class="glossary-term-header">
+                            <span class="glossary-term-title">${term.title}</span>
+                            <span class="glossary-term-icon">🔓</span>
+                        </div>
+                        <div class="glossary-term-desc">${term.definition}</div>
+                        <div style="margin-top: 8px; padding: 8px; background: rgba(0,212,255,0.1); border-radius: 6px; font-size: 12px;">
+                            <strong>Why it matters:</strong> ${term.whyItMatters}
+                        </div>
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--gold);">
+                            💡 ${term.realWorld}
+                        </div>
+                    `;
+                    card.onclick = () => {
+                        // Could expand for more detail
+                    };
+                } else {
+                    card.innerHTML = `
+                        <div class="glossary-term-header">
+                            <span class="glossary-term-title">???</span>
+                            <span class="glossary-term-icon">🔒</span>
+                        </div>
+                        <div class="glossary-term-desc">Play more levels to unlock this term!</div>
+                    `;
+                }
+                
+                list.appendChild(card);
+            });
+            
+            showScreen('glossaryScreen');
         }
 
         // Visual Effects
