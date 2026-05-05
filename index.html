@@ -2,2951 +2,599 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Learn to file taxes the fun way! Help clients maximize refunds and avoid audits in this MoneyBot educational game.">
-    <meta name="theme-color" content="#00D4FF">
-    <meta property="og:title" content="Tax Season Hero - MoneyBot">
-    <meta property="og:description" content="Master tax filing through gameplay. Can you beat the deadline?">
-    <meta property="og:image" content="assets/game-hero.png">
-    <link rel="icon" type="image/png" href="assets/moneybot-tax-coach.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Tax Season Hero | MoneyBot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Season Hero</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            /* Indie Tax Office Palette - Paper & Ink meets Neon */
-            --paper: #f5f3ef;
-            --paper-dark: #e8e4dc;
-            --ink: #1a1a2e;
-            --ink-light: #2d2d44;
-            --stamp-red: #c41e3a;
-            --stamp-red-glow: rgba(196, 30, 58, 0.3);
-            --highlight: #2563eb;
-            --highlight-glow: rgba(37, 99, 235, 0.2);
-            --money-green: #059669;
-            --warning-amber: #d97706;
-            --accent-purple: #7c3aed;
-            
-            /* Functional mapping */
-            --cyan: var(--highlight);
-            --magenta: var(--accent-purple);
-            --gold: var(--money-green);
-            --dark: var(--ink);
-            --darker: #0f0f1a;
-            --panel: var(--paper-dark);
-        }
-
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Space Grotesk', -apple-system, sans-serif;
-            background: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #f5f3ef;
             min-height: 100vh;
-            color: var(--ink);
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 20% 50%, var(--highlight-glow) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, var(--stamp-red-glow) 0%, transparent 40%);
         }
-
-        .game-container {
+        
+        .container {
             max-width: 480px;
             margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            padding: 16px;
         }
-
-        /* Header - Indie Document Style */
+        
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        /* Header */
         .header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             padding: 16px;
-            background: var(--paper);
+            background: #f5f3ef;
+            color: #1a1a2e;
             border-radius: 12px;
-            border: 2px solid var(--ink-light);
-            box-shadow: 4px 4px 0 var(--ink-light);
-            margin-bottom: 20px;
-            position: relative;
+            margin-bottom: 16px;
         }
-
-        .header::before {
-            content: 'TOP SECRET';
-            position: absolute;
-            top: -8px;
-            right: 16px;
-            background: var(--stamp-red);
-            color: white;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 2px;
-            transform: rotate(-3deg);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 1px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--ink);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid var(--highlight);
-        }
-
-        .logo-icon img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-            filter: brightness(1.2);
-        }
-
-        .logo-text {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.5px;
-        }
-
-        .score-display {
-            text-align: right;
-        }
-
-        .score-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            color: var(--ink-light);
-            letter-spacing: 1px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .score-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--money-green);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Screens */
-        .screen {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Home Screen - Indie Style */
-        .hero-section {
-            text-align: center;
-            padding: 32px 0;
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 8px;
-            color: var(--paper);
-            letter-spacing: -1px;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            color: rgba(245, 243, 239, 0.7);
-            margin-bottom: 8px;
-        }
-
-        .moneybot-tagline {
-            font-size: 11px;
-            color: var(--highlight);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 24px;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .moneybot-mascot {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 3px solid var(--paper);
-            box-shadow: 6px 6px 0 var(--stamp-red);
-            transform: rotate(-2deg);
-            transition: transform 0.3s ease;
-        }
-
-        .moneybot-mascot:hover {
-            transform: rotate(0deg) scale(1.02);
-        }
-
-        .moneybot-mascot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Level Cards - Case File Style */
-        .levels-grid {
-            display: grid;
-            gap: 12px;
-        }
-
+        
+        .header h1 { font-size: 20px; }
+        .score { font-size: 14px; color: #059669; font-weight: bold; }
+        
+        /* Level Cards */
         .level-card {
-            background: var(--paper);
-            border: 2px solid var(--ink-light);
-            border-radius: 8px;
+            background: #f5f3ef;
+            color: #1a1a2e;
             padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: 3px 3px 0 var(--ink-light);
+            border: 2px solid #2d2d44;
         }
-
-        .level-card:hover, .level-card:active {
-            border-color: var(--highlight);
-            transform: translate(-2px, -2px);
-            box-shadow: 5px 5px 0 var(--ink-light);
-        }
-
+        
         .level-card.locked {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
-            filter: grayscale(1);
         }
-
-        .level-card.completed {
-            border-color: var(--money-green);
-            background: linear-gradient(135deg, var(--paper) 0%, rgba(5, 150, 105, 0.1) 100%);
-        }
-
-        .level-number {
-            position: absolute;
-            top: -10px;
-            left: 12px;
-            background: var(--ink);
-            color: var(--paper);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 4px 10px;
+        
+        .level-card h3 { font-size: 18px; margin-bottom: 4px; }
+        .level-card p { font-size: 13px; color: #2d2d44; }
+        .level-num { 
+            float: right; 
+            background: #1a1a2e; 
+            color: #f5f3ef;
+            padding: 4px 12px;
             border-radius: 4px;
-            letter-spacing: 1px;
-        }
-
-        .level-card.completed .level-number {
-            background: var(--money-green);
-        }
-
-        .level-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--ink);
-            padding-top: 8px;
-        }
-
-        .level-desc {
             font-size: 12px;
-            color: var(--ink-light);
         }
-
-        .level-difficulty {
-            display: flex;
-            gap: 4px;
-            margin-top: 10px;
-        }
-
-        .difficulty-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 2px;
-            background: var(--paper-dark);
-        }
-
-        .difficulty-dot.active {
-            background: var(--stamp-red);
-        }
-
-        /* Game Screen - Indie Document Style */
+        
+        /* Game Screen */
         .timer-bar {
             height: 8px;
-            background: var(--paper-dark);
+            background: #2d2d44;
             border-radius: 4px;
-            margin: 20px 0;
+            margin-bottom: 16px;
             overflow: hidden;
-            border: 2px solid var(--ink-light);
         }
-
+        
         .timer-fill {
             height: 100%;
-            background: var(--highlight);
-            border-radius: 2px;
+            background: #2563eb;
+            width: 100%;
             transition: width 1s linear;
         }
-
-        .timer-fill.warning {
-            background: var(--stamp-red);
-            animation: timerPulse 1s infinite;
-        }
-
-        @keyframes timerPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .client-section {
-            background: var(--paper);
-            border: 2px solid var(--ink-light);
-            border-radius: 8px;
+        
+        .client-box {
+            background: #f5f3ef;
+            color: #1a1a2e;
             padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 4px 4px 0 var(--ink-light);
-        }
-
-        .client-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .client-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: var(--paper-dark);
-            border: 2px solid var(--ink-light);
-        }
-
-        .client-info h3 {
-            font-size: 16px;
-            margin-bottom: 2px;
-            color: var(--ink);
-            font-weight: 600;
-        }
-
-        .client-info p {
-            font-size: 12px;
-            color: var(--ink-light);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .client-story {
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--ink);
-            padding: 12px;
-            background: var(--paper-dark);
-            border-radius: 6px;
-            border-left: 3px solid var(--highlight);
-        }
-
-        .moneybot-mission {
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: var(--paper-dark);
-            border-radius: 6px;
-            border: 1px solid var(--highlight);
-            font-size: 12px;
-        }
-
-        .mission-label {
-            color: var(--highlight);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 10px;
-        }
-
-        .mission-text {
-            color: var(--ink);
-        }
-
-        .documents-section {
+            border-radius: 12px;
             margin-bottom: 16px;
         }
-
+        
+        .client-box h2 { font-size: 20px; margin-bottom: 8px; }
+        .client-box p { font-size: 14px; line-height: 1.5; color: #2d2d44; }
+        
+        /* Documents */
         .section-title {
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
-            color: rgba(245, 243, 239, 0.6);
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             margin-bottom: 12px;
-            font-family: 'JetBrains Mono', monospace;
+            color: rgba(245, 243, 239, 0.7);
         }
-
-        .documents-grid {
+        
+        .doc-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
+            margin-bottom: 16px;
         }
-
-        .document-card {
-            background: var(--paper);
-            border: 2px solid var(--ink-light);
-            border-radius: 6px;
-            padding: 14px;
+        
+        .doc-card {
+            background: #f5f3ef;
+            color: #1a1a2e;
+            padding: 16px;
+            border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 2px 2px 0 var(--ink-light);
+            border: 2px solid transparent;
         }
-
-        .document-card:hover {
-            border-color: var(--highlight);
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0 var(--ink-light);
+        
+        .doc-card.selected {
+            border-color: #059669;
+            background: #e8f5e9;
         }
-
-        .document-card.selected {
-            border-color: var(--money-green);
-            background: rgba(5, 150, 105, 0.1);
-            box-shadow: 2px 2px 0 var(--money-green);
-        }
-
-        .document-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .document-name {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        .deductions-section {
-            margin-bottom: 16px;
-        }
-
+        
+        .doc-card .icon { font-size: 32px; margin-bottom: 8px; }
+        .doc-card .name { font-size: 13px; font-weight: 600; }
+        
+        /* Deductions */
+        .deduction-list { margin-bottom: 16px; }
+        
         .deduction-item {
-            background: var(--paper);
-            border: 2px solid var(--ink-light);
-            border-radius: 6px;
-            padding: 12px;
+            background: #f5f3ef;
+            color: #1a1a2e;
+            padding: 14px;
+            border-radius: 8px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.15s ease;
-            box-shadow: 2px 2px 0 var(--ink-light);
         }
-
-        .deduction-item:hover {
-            border-color: var(--highlight);
-            transform: translate(-1px, -1px);
-        }
-
+        
         .deduction-item.selected {
-            border-color: var(--money-green);
-            background: rgba(5, 150, 105, 0.1);
-            box-shadow: 2px 2px 0 var(--money-green);
+            border: 2px solid #059669;
+            background: #e8f5e9;
         }
-
-        .deduction-item.audit-risk {
-            border-color: var(--stamp-red);
-            background: rgba(196, 30, 58, 0.05);
+        
+        .deduction-item.audit {
+            border: 2px solid #c41e3a;
         }
-
-        .deduction-checkbox {
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--ink-light);
+        
+        .check { 
+            width: 24px; 
+            height: 24px; 
+            border: 2px solid #2d2d44;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            flex-shrink: 0;
-            color: transparent;
         }
-
-        .deduction-item.selected .deduction-checkbox {
-            background: var(--money-green);
-            border-color: var(--money-green);
+        
+        .deduction-item.selected .check {
+            background: #059669;
+            border-color: #059669;
             color: white;
         }
-
-        .deduction-info {
-            flex: 1;
-        }
-
-        .deduction-name {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-            color: var(--ink);
-        }
-
-        .deduction-desc {
-            font-size: 11px;
-            color: var(--ink-light);
-        }
-
-        .deduction-amount {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--money-green);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .audit-warning {
-            font-size: 10px;
-            color: var(--stamp-red);
-            margin-top: 4px;
-            display: none;
-            font-weight: 500;
-        }
-
-        .deduction-item.audit-risk .audit-warning {
-            display: block;
-        }
-
-        .action-button {
-            background: var(--ink);
-            border: 2px solid var(--ink-light);
-            border-radius: 8px;
-            padding: 16px 28px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--paper);
-            cursor: pointer;
+        
+        .deduction-info { flex: 1; }
+        .deduction-info h4 { font-size: 14px; margin-bottom: 2px; }
+        .deduction-info p { font-size: 12px; color: #2d2d44; }
+        .deduction-amt { font-weight: bold; color: #059669; }
+        .audit-warning { font-size: 11px; color: #c41e3a; margin-top: 4px; display: none; }
+        .deduction-item.audit .audit-warning { display: block; }
+        
+        /* Buttons */
+        .btn {
             width: 100%;
-            margin-top: 16px;
-            transition: all 0.15s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            box-shadow: 4px 4px 0 var(--ink-light);
-        }
-
-        .action-button:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 var(--highlight);
-            border-color: var(--highlight);
-        }
-
-        .action-button:active {
-            transform: translate(0, 0);
-            box-shadow: 2px 2px 0 var(--highlight);
-        }
-
-        .action-button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* MoneyBot Tip */
-        .moneybot-tip {
-            background: var(--paper);
-            border: 2px solid var(--highlight);
-            border-radius: 8px;
-            padding: 14px;
-            margin: 16px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            animation: slideIn 0.3s ease;
-            box-shadow: 3px 3px 0 var(--ink-light);
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .moneybot-tip-icon {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 2px solid var(--ink-light);
-        }
-
-        .moneybot-tip-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .moneybot-tip-content h4 {
-            font-size: 12px;
-            color: var(--highlight);
-            margin-bottom: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .moneybot-tip-content p {
-            font-size: 12px;
-            line-height: 1.5;
-            color: var(--ink);
-        }
-
-        /* Results Screen */
-        .results-header {
-            text-align: center;
-            padding: 32px 0;
-        }
-
-        .moneybot-branding-footer {
-            text-align: center;
-            padding: 20px 0;
-            margin-top: auto;
-            border-top: 1px solid var(--ink-light);
-        }
-
-        .moneybot-branding-footer img {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            border: 1px solid var(--ink-light);
-        }
-
-        .moneybot-branding-text {
-            font-size: 10px;
-            color: rgba(245, 243, 239, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .moneybot-watermark {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            width: 32px;
-            height: 32px;
-            opacity: 0.1;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .moneybot-watermark img {
-            width: 100%;
-            height: 100%;
-            border-radius: 6px;
-        }
-
-        .result-icon {
-            font-size: 64px;
-            margin-bottom: 12px;
-        }
-
-        .result-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--paper);
-        }
-
-        .result-subtitle {
-            font-size: 14px;
-            color: rgba(245, 243, 239, 0.7);
-        }
-
-        .results-stats {
-            background: var(--paper);
-            border: 2px solid var(--ink-light);
-            border-radius: 8px;
             padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 4px 4px 0 var(--ink-light);
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
         }
-
-        .stat-row {
+        
+        .btn:hover { background: #1d4ed8; }
+        
+        .btn-secondary {
+            background: #2d2d44;
+            margin-top: 8px;
+        }
+        
+        .btn-secondary:hover { background: #1a1a2e; }
+        
+        /* Results */
+        .result-box {
+            background: #f5f3ef;
+            color: #1a1a2e;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .result-row {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid var(--paper-dark);
+            border-bottom: 1px solid #e8e4dc;
         }
-
-        .stat-row:last-child {
-            border-bottom: none;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--ink-light);
-        }
-
-        .stat-value.positive {
-            color: var(--money-green);
-        }
-
-        .stat-value.negative {
-            color: var(--stamp-red);
-        }
-
-        .stat-value.gold {
-            color: var(--money-green);
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;
-            animation: confetti-fall 3s ease-out forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--panel);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            animation: modalPop 0.3s ease;
-        }
-
-        @keyframes modalPop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .modal-text {
-            font-size: 14px;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 20px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-button {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .modal-button.primary {
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            color: white;
-        }
-
-        .modal-button.secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        .modal-button:hover {
-            transform: translateY(-2px);
-        }
-
-        /* Learn More Panel */
-        .learn-more-panel {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 255, 0.05));
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-            animation: slideIn 0.3s ease;
-        }
-
-        .learn-more-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            color: var(--cyan);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .learn-more-section {
-            margin-bottom: 12px;
-        }
-
-        .learn-more-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .learn-more-label {
-            font-size: 11px;
-            color: var(--magenta);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .learn-more-text {
-            font-size: 13px;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.85);
-        }
-
-        .learn-more-protip {
-            background: rgba(255, 215, 0, 0.15);
-            border-left: 3px solid var(--gold);
-            padding: 10px 12px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 8px;
-        }
-
-        .learn-more-protip .learn-more-label {
-            color: var(--gold);
-        }
-
-        .info-button {
-            background: rgba(0, 212, 255, 0.2);
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            cursor: pointer;
-            margin-left: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .info-button:hover {
-            background: var(--cyan);
-            color: var(--dark);
-        }
-
-        /* What You Learned Screen */
-        .learned-screen {
-            background: var(--panel);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 16px;
-        }
-
-        .learned-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--gold);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .learned-list {
-            list-style: none;
-        }
-
-        .learned-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .learned-item:last-child {
-            border-bottom: none;
-        }
-
-        .learned-check {
-            width: 24px;
-            height: 24px;
-            background: rgba(74, 222, 128, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 12px;
-        }
-
-        .learned-text {
-            font-size: 14px;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .knowledge-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 12px;
-        }
-
-        /* Tax Glossary Screen */
-        .glossary-screen {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-        }
-
-        .glossary-screen.active {
-            display: flex;
-        }
-
-        .glossary-term {
-            background: var(--panel);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .glossary-term:hover {
-            border-color: var(--cyan);
-        }
-
-        .glossary-term.unlocked {
-            border-color: rgba(0, 212, 255, 0.3);
-        }
-
-        .glossary-term.locked {
-            opacity: 0.5;
-        }
-
-        .glossary-term-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .glossary-term-title {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .glossary-term-icon {
-            font-size: 12px;
-            color: var(--gold);
-        }
-
-        .glossary-term-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.7);
-            line-height: 1.4;
-        }
-
-        /* Progress particles */
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--cyan);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: particle-float 2s ease-out forwards;
-        }
-
-        @keyframes particle-float {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-50px) scale(0); }
-        }
-
-        /* Tutorial Overlay */
-        .tutorial-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 3000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .tutorial-overlay.active {
-            display: flex;
-        }
-
-        .tutorial-box {
-            background: var(--panel);
-            border: 2px solid var(--cyan);
-            border-radius: 20px;
-            padding: 28px;
-            max-width: 360px;
-            text-align: center;
-            animation: tutorialPop 0.4s ease;
-        }
-
-        @keyframes tutorialPop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .tutorial-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .tutorial-text {
-            font-size: 16px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 20px;
-        }
-
-        .tutorial-button {
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            border: none;
-            border-radius: 12px;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Level Progress Indicator */
-        .level-progress {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--cyan);
-            z-index: 100;
-            display: none;
-        }
-
-        .level-progress.active {
-            display: block;
-        }
+        
+        .result-row:last-child { border-bottom: none; }
+        .result-label { font-size: 14px; color: #2d2d44; }
+        .result-value { font-weight: 600; }
+        .result-value.good { color: #059669; }
+        .result-value.bad { color: #c41e3a; }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
-                </div>
-                <div class="logo-text">TAX HERO</div>
-            </div>
-            <div class="score-display">
-                <div class="score-label">Total Score</div>
-                <div class="score-value" id="totalScore">0</div>
-            </div>
-        </header>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📊 Tax Hero</h1>
+            <div class="score">Score: <span id="totalScore">0</span></div>
+        </div>
 
-        <!-- Home Screen -->
+        <!-- HOME SCREEN -->
         <div class="screen active" id="homeScreen">
-            <div class="hero-section">
-                <div class="moneybot-mascot">
-                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot Tax Coach">
-                </div>
-                <p class="moneybot-tagline">🤖 MoneyBot Presents</p>
-                <h1 class="hero-title">Tax Season Hero</h1>
-                <p class="hero-subtitle">Master tax filing the fun way!</p>
-            </div>
-
-            <div style="font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">📚 Chapter 1: First Job Basics</div>
-            <div class="levels-grid">
-                <div class="level-card" data-level="1" onclick="startLevel(1)">
-                    <div class="level-number">1</div>
-                    <h3 class="level-title">First Paycheck</h3>
-                    <p class="level-desc">Your first W-2 • Tutorial</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                        <div class="difficulty-dot"></div>
-                    </div>
-                </div>
-
-                <div class="level-card" data-level="2" id="level2Card" onclick="startLevel(2)">
-                    <div class="level-number">2</div>
-                    <h3 class="level-title">W-2 vs 1099</h3>
-                    <p class="level-desc">Know the difference</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                        <div class="difficulty-dot"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">💼 Chapter 2: Self-Employment</div>
-            <div class="levels-grid">
-                <div class="level-card" data-level="3" id="level3Card" onclick="startLevel(3)">
-                    <div class="level-number">3</div>
-                    <h3 class="level-title">First 1099</h3>
-                    <p class="level-desc">No withholding = Save 30%</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                        <div class="difficulty-dot"></div>
-                    </div>
-                </div>
-
-                <div class="level-card" data-level="4" id="level4Card" onclick="startLevel(4)">
-                    <div class="level-number">4</div>
-                    <h3 class="level-title">Your First Deduction</h3>
-                    <p class="level-desc">Business equipment</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                    </div>
-                </div>
-
-                <div class="level-card" data-level="5" id="level5Card" onclick="startLevel(5)">
-                    <div class="level-number">5</div>
-                    <h3 class="level-title">Mileage Mastery</h3>
-                    <p class="level-desc">Track miles, save money</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="font-size: 11px; color: var(--magenta); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">⚠️ Chapter 3: Avoid Trouble</div>
-            <div class="levels-grid">
-                <div class="level-card" data-level="6" id="level6Card" onclick="startLevel(6)">
-                    <div class="level-number">6</div>
-                    <h3 class="level-title">Audit Alert</h3>
-                    <p class="level-desc">Spot red flags</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">🏆 Chapter 4: Advanced</div>
-            <div class="levels-grid">
-                <div class="level-card" data-level="7" id="level7Card" onclick="startLevel(7)">
-                    <div class="level-number">7</div>
-                    <h3 class="level-title">Gig Worker Pro</h3>
-                    <p class="level-desc">Uber + DoorDash</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                    </div>
-                </div>
-
-                <div class="level-card" data-level="8" id="level8Card" onclick="startLevel(8)">
-                    <div class="level-number">8</div>
-                    <h3 class="level-title">Crypto Taxes</h3>
-                    <p class="level-desc">Losses can help!</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                    </div>
-                </div>
-
-                <div class="level-card" data-level="9" id="level9Card" onclick="startLevel(9)">
-                    <div class="level-number">9</div>
-                    <h3 class="level-title">Tax Master</h3>
-                    <p class="level-desc">The ultimate test</p>
-                    <div class="level-difficulty">
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="action-button" onclick="showGlossary()" style="margin-top: 16px; background: var(--paper-dark); color: var(--ink); border-color: var(--ink-light);">
-                📚 TAX GLOSSARY
-            </button>
+            <div id="levelsList"></div>
         </div>
 
-        <!-- Game Screen -->
+        <!-- GAME SCREEN -->
         <div class="screen" id="gameScreen">
-            <div class="timer-bar">
-                <div class="timer-fill" id="timerFill"></div>
-            </div>
-
-            <div class="client-section">
-                <div class="client-header">
-                    <div class="client-avatar" id="clientAvatar">👤</div>
-                    <div class="client-info">
-                        <h3 id="clientName">Client Name</h3>
-                        <p id="clientJob">Job Title</p>
-                    </div>
-                </div>
-                <div class="client-story" id="clientStory">
-                    Client story goes here...
-                </div>
-                <div class="moneybot-mission" id="moneybotMission">
-                    <span class="mission-label">💡 MoneyBot Mission:</span>
-                    <span class="mission-text">Help this client file correctly and maximize their refund!</span>
-                </div>
-            </div>
-
-            <div class="documents-section">
-                <div class="section-title">Tax Documents</div>
-                <div class="documents-grid" id="documentsGrid">
-                    <!-- Documents inserted by JS -->
-                </div>
-            </div>
-
-            <div class="deductions-section" id="deductionsSection" style="display:none;">
-                <div class="section-title">Deductions & Credits</div>
-                <div id="deductionsList">
-                    <!-- Deductions inserted by JS -->
-                </div>
-            </div>
-
-            <div class="moneybot-tip" id="moneybotTip" style="display:none;">
-                <div class="moneybot-tip-icon">
-                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
-                </div>
-                <div class="moneybot-tip-content">
-                    <h4>MoneyBot Tax Tip!</h4>
-                    <p id="tipText">Tip goes here...</p>
-                </div>
-            </div>
-
-            <button class="action-button" id="fileButton" onclick="fileReturn()">
-                FILE RETURN
-            </button>
-        </div>
-
-        <!-- Results Screen -->
-        <div class="screen" id="resultsScreen">
-            <div class="results-header">
-                <div class="result-icon" id="resultIcon">🎉</div>
-                <h2 class="result-title" id="resultTitle">Return Filed!</h2>
-                <p class="result-subtitle" id="resultSubtitle">MoneyBot approves of your tax skills!</p>
-            </div>
-
-            <div class="results-stats">
-                <div class="stat-row">
-                    <span class="stat-label">Filing Status</span>
-                    <span class="stat-value" id="statStatus">Single</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Documents Filed</span>
-                    <span class="stat-value positive" id="statDocs">1/1</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Deductions Claimed</span>
-                    <span class="stat-value positive" id="statDeductions">$0</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Refund Amount</span>
-                    <span class="stat-value gold" id="statRefund">$0</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Time Bonus</span>
-                    <span class="stat-value positive" id="statTime">+100</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Audit Risk</span>
-                    <span class="stat-value" id="statRisk">Low</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Level Score</span>
-                    <span class="stat-value gold" id="statScore">0</span>
-                </div>
-            </div>
-
-            <button class="action-button" onclick="showLearnedScreen()">
-                WHAT YOU LEARNED 🎓
-            </button>
-
-            <button class="action-button" onclick="backToMenu()" style="margin-top: 8px; background: rgba(255,255,255,0.1);">
-                BACK TO MENU
-            </button>
-
-            <div class="moneybot-branding-footer">
-                <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
-                <div class="moneybot-branding-text">Powered by MoneyBot</div>
-                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px;">Learn real money skills through play</div>
-            </div>
-        </div>
-
-        <!-- What You Learned Screen -->
-        <div class="screen" id="learnedScreen">
-            <div class="learned-screen">
-                <h2 class="learned-title">
-                    <span>🎓</span>
-                    What You Learned
-                </h2>
-                <ul class="learned-list" id="learnedList">
-                    <!-- Populated by JS -->
-                </ul>
-                <div class="knowledge-badge" id="knowledgeBadge">
-                    <span>🧠</span>
-                    <span id="badgeText">Tax Knowledge +3</span>
-                </div>
+            <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+            
+            <div class="client-box">
+                <h2 id="clientName">Client</h2>
+                <p id="clientStory">Story here...</p>
             </div>
             
-            <button class="action-button" onclick="showGlossary()">
-                VIEW TAX GLOSSARY 📚
-            </button>
+            <div class="section-title">Tax Documents</div>
+            <div class="doc-grid" id="docsList"></div>
             
-            <button class="action-button" onclick="backToMenu()" style="margin-top: 8px; background: rgba(255,255,255,0.1);">
-                BACK TO MENU
-            </button>
+            <div class="section-title" id="deductTitle" style="display:none;">Deductions</div>
+            <div class="deduction-list" id="deductList"></div>
+            
+            <button class="btn" id="fileBtn">FILE RETURN</button>
         </div>
 
-        <!-- Tax Glossary Screen -->
-        <div class="screen" id="glossaryScreen">
-            <div style="text-align: center; padding: 20px 0;">
-                <h2 class="hero-title" style="font-size: 24px;">📚 Tax Glossary</h2>
-                <p class="hero-subtitle">Terms you've unlocked through play</p>
+        <!-- RESULTS SCREEN -->
+        <div class="screen" id="resultScreen">
+            <div class="result-box">
+                <div class="result-row">
+                    <span class="result-label">Status</span>
+                    <span class="result-value" id="resStatus">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Documents</span>
+                    <span class="result-value good" id="resDocs">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Deductions</span>
+                    <span class="result-value" id="resDeduct">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Refund</span>
+                    <span class="result-value good" id="resRefund">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Score</span>
+                    <span class="result-value good" id="resScore">-</span>
+                </div>
             </div>
-            
-            <div id="glossaryList" style="flex: 1; overflow-y: auto;">
-                <!-- Populated by JS -->
-            </div>
-            
-            <button class="action-button" onclick="backToMenu()">
-                BACK TO MENU
-            </button>
-        </div>
-    </div>
-
-    <div class="moneybot-watermark">
-        <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
-    </div>
-
-    <!-- Tutorial Overlay -->
-    <div class="tutorial-overlay" id="tutorialOverlay">
-        <div class="tutorial-box">
-            <div class="tutorial-icon" id="tutorialIcon">👋</div>
-            <p class="tutorial-text" id="tutorialText">Welcome to Tax Season Hero!</p>
-            <button class="tutorial-button" onclick="nextTutorialStep()">Got it!</button>
-        </div>
-    </div>
-
-    <!-- Level Progress -->
-    <div class="level-progress" id="levelProgress">Level 1 of 9</div>
-
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <div class="modal-icon" id="modalIcon">⚠️</div>
-            <h3 class="modal-title" id="modalTitle">Wait!</h3>
-            <p class="modal-text" id="modalText">Are you sure?</p>
-            <div class="modal-buttons">
-                <button class="modal-button secondary" onclick="closeModal()">Cancel</button>
-                <button class="modal-button primary" id="modalConfirm" onclick="closeModal()">OK</button>
-            </div>
+            <button class="btn" id="continueBtn">CONTINUE</button>
         </div>
     </div>
 
     <script>
-        // Game State
-        const gameState = {
-            totalScore: 0,
-            currentLevel: 0,
-            unlockedLevels: [1, 2, 3],
-            completedLevels: [],
-            timer: null,
-            timeLeft: 0,
-            maxTime: 0,
-            selectedDocs: new Set(),
-            selectedDeductions: new Set(),
-            levelData: null,
-            tutorialStep: 0,
-            tutorialActive: false
-        };
-
-        // Level Data
-        const taxKnowledge = {
-            unlocked: [],
-            glossary: {
-                "W-2": {
-                    title: "W-2 Form",
-                    definition: "A tax form employers send to employees showing wages earned and taxes withheld.",
-                    whyItMatters: "You NEED this to file. It proves how much you earned and what you already paid in taxes.",
-                    realWorld: "Look for it in January/February from every employer you had last year."
-                },
-                "1099": {
-                    title: "1099 Forms",
-                    definition: "Forms for non-employee income like freelance work, interest, or investments.",
-                    whyItMatters: "The IRS gets a copy too - they KNOW about this income. Don't ignore it.",
-                    realWorld: "Freelancers, gig workers, and anyone with side income gets these."
-                },
-                "deduction": {
-                    title: "Tax Deduction",
-                    definition: "Expenses that reduce your taxable income, lowering your tax bill.",
-                    whyItMatters: "More deductions = lower income = less tax owed. But they must be LEGIT.",
-                    realWorld: "Keep receipts! The IRS can ask for proof up to 3 years later."
-                },
-                "withholding": {
-                    title: "Tax Withholding",
-                    definition: "Money taken from each paycheck for taxes before you get paid.",
-                    whyItMatters: "Too much = big refund (you gave IRS an interest-free loan). Too little = you owe.",
-                    realWorld: "Adjust your W-4 if your refund is huge or you owe a lot."
-                },
-                "audit": {
-                    title: "IRS Audit",
-                    definition: "When the IRS reviews your tax return more closely for errors or fraud.",
-                    whyItMatters: "Audits are stressful and can result in owing more money plus penalties.",
-                    realWorld: "Red flags: round numbers, home office claims, huge charitable donations vs income."
-                },
-                "selfemployment": {
-                    title: "Self-Employment Tax",
-                    definition: "Extra 15.3% tax on 1099 income covering Social Security and Medicare.",
-                    whyItMatters: "Employees split this with employers. Self-employed? You pay all of it.",
-                    realWorld: "Set aside 25-30% of 1099 income for taxes. Seriously."
-                },
-                "mileage": {
-                    title: "Mileage Deduction",
-                    definition: "Deducting business driving at a standard rate (67¢/mile in 2024).",
-                    whyItMatters: "Driving for work adds up fast. This deduction can save hundreds.",
-                    realWorld: "Track every mile with an app. Estimates don't work if audited."
-                },
-                "crypto": {
-                    title: "Crypto Taxes",
-                    definition: "Cryptocurrency is treated as property - gains/losses are taxable events.",
-                    whyItMatters: "Every trade, sale, or crypto payment is a taxable event. The IRS knows.",
-                    realWorld: "Use CoinTracker or similar to track. Exchanges now report to IRS."
-                }
-            }
-        };
-
-        const levels = {
+        // GAME DATA
+        const LEVELS = {
             1: {
-                client: {
-                    name: "Maya Johnson",
-                    job: "First Job Ever",
-                    avatar: "👋",
-                    story: "Maya just got her first paycheck from the local ice cream shop! She's confused about why her check is smaller than expected. Help her understand her W-2 and file her first return."
-                },
-                documents: [
-                    { 
-                        id: "w2", 
-                        name: "W-2 Form", 
-                        icon: "🍦", 
-                        desc: "Ice cream shop wages",
-                        learnMore: {
-                            what: "A W-2 shows what you earned and what tax was already taken out.",
-                            keyBoxes: "Box 1: Total pay. Box 2: Tax already paid (withholding).",
-                            whySmaller: "Your employer takes out tax before you get paid - that's withholding!"
-                        }
-                    }
+                name: "Maya Johnson",
+                story: "Maya just got her first paycheck! She made $3,200 and had $280 withheld. Help her file with her W-2.",
+                docs: [
+                    { id: 'w2', name: 'W-2 Form', icon: '🧾', correct: true },
+                    { id: 'fake', name: '1099-NEC', icon: '📋', correct: false }
                 ],
                 deductions: [],
-                correctDocs: ["w2"],
-                tips: [
-                    "Your first job? You get a W-2 in January showing what you earned.",
-                    "Made under $13,850? You probably get ALL your withholding back!"
-                ],
-                learned: [
-                    "W-2 forms show your wages and taxes withheld",
-                    "Withholding is money taken from paychecks for taxes",
-                    "First jobs often result in refunds because you overpaid"
-                ],
-                baseRefund: 280,
-                timeLimit: 90,
-                tutorial: true,
-                tutorialSteps: [
-                    { target: "documentsGrid", text: "👆 TAP the W-2 form to select it. This is the ONLY document Maya has." },
-                    { target: "fileButton", text: "👆 Now tap FILE RETURN to submit Maya's taxes!" }
-                ]
+                refund: 280,
+                time: 60
             },
             2: {
-                client: {
-                    name: "Alex Rivera",
-                    job: "Lifeguard",
-                    avatar: "🏊",
-                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld. But wait - he also got something called a 1099 in the mail...",
-                    learningGoal: "Learn the difference between W-2 and 1099 income."
-                },
-                documents: [
-                    { 
-                        id: "w2", 
-                        name: "W-2 Form", 
-                        icon: "📄", 
-                        desc: "Wages from pool job",
-                        learnMore: {
-                            what: "Alex was an EMPLOYEE at the pool. He gets a W-2.",
-                            keyPoint: "Employers take out taxes for employees. Alex already paid some tax!"
-                        }
-                    },
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC", 
-                        icon: "📋", 
-                        desc: "Swimming lessons", 
-                        fake: true,
-                        learnMore: {
-                            whyFake: "Alex taught one private lesson but didn't earn enough ($600+) for a 1099.",
-                            keyPoint: "1099s are for contractors. Alex was mostly an employee (W-2).",
-                            rule: "You need $600+ in non-employee income to get a 1099."
-                        }
-                    }
+                name: "Alex Rivera",
+                story: "Alex lifeguarded at the pool ($4,200). Got a W-2 but also something called a 1099 in the mail...",
+                docs: [
+                    { id: 'w2', name: 'W-2 Pool', icon: '🏊', correct: true },
+                    { id: 'fake', name: '1099-NEC', icon: '📋', correct: false }
                 ],
                 deductions: [],
-                correctDocs: ["w2"],
-                tips: [
-                    "One W-2 = employee job. Taxes already withheld.",
-                    "1099 = contractor income. No taxes taken out!"
-                ],
-                learned: [
-                    "W-2 = employee, taxes withheld. 1099 = contractor, no withholding.",
-                    "You need $600+ in contractor income to get a 1099",
-                    "Don't file forms you don't have!"
-                ],
-                baseRefund: 350,
-                timeLimit: 60
+                refund: 350,
+                time: 60
             },
             3: {
-                client: {
-                    name: "Taylor Kim",
-                    job: "Freelance Designer",
-                    avatar: "🎨",
-                    story: "Taylor made $4,500 designing logos for small businesses. No W-2 - just a 1099. This is their ONLY income. Learn what 1099 means for taxes!",
-                    learningGoal: "Understand 1099 income and self-employment tax basics."
-                },
-                documents: [
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC", 
-                        icon: "🎨", 
-                        desc: "Design income $4,500",
-                        learnMore: {
-                            what: "Taylor is a CONTRACTOR, not an employee. No boss = no W-2.",
-                            keyPoint: "1099 = NO taxes were taken out. Taylor owes it ALL at tax time.",
-                            warning: "Self-employment tax = 15.3% on TOP of income tax!"
-                        }
-                    },
-                    { 
-                        id: "fake1", 
-                        name: "W-2 Form", 
-                        icon: "📄", 
-                        desc: "Employer wages", 
-                        fake: true,
-                        learnMore: {
-                            whyFake: "Taylor has no employer. Only clients who paid as contractors.",
-                            keyPoint: "No W-2 means you're on your own for taxes. Save 25-30%!"
-                        }
-                    }
+                name: "Taylor Kim",
+                story: "Taylor is a freelance designer with $4,500 on a 1099. No taxes were withheld - this is different!",
+                docs: [
+                    { id: '1099', name: '1099-NEC', icon: '🎨', correct: true },
+                    { id: 'fake', name: 'W-2 Form', icon: '📄', correct: false }
                 ],
                 deductions: [],
-                correctDocs: ["1099"],
-                tips: [
-                    "1099 income = you're the boss. But you pay ALL the taxes.",
-                    "Set aside 25-30% of 1099 income for taxes!"
-                ],
-                learned: [
-                    "1099 income has ZERO withholding",
-                    "Self-employment tax is 15.3% extra",
-                    "Save 25-30% of all 1099 income for taxes",
-                    "No employer = you handle taxes yourself"
-                ],
-                baseRefund: 0,
-                timeBonus: false,
-                timeLimit: 75
+                refund: 0,
+                time: 60
             },
             4: {
-                client: {
-                    name: "Jordan Chen",
-                    job: "Barista + Photographer",
-                    avatar: "☕",
-                    story: "Jordan worked at a coffee shop (W-2: $8,500) AND did freelance photography (1099: $3,200). Bought a camera for the business. ONE deduction to learn."
-                },
-                documents: [
-                    { 
-                        id: "w2", 
-                        name: "W-2 Coffee Shop", 
-                        icon: "☕", 
-                        desc: "$8,500 wages",
-                        learnMore: {
-                            what: "Jordan's employee wages. Taxes already withheld.",
-                            impact: "But the 1099 income means Jordan still owes more tax."
-                        }
-                    },
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC Photo", 
-                        icon: "📷", 
-                        desc: "$3,200 freelance",
-                        learnMore: {
-                            what: "Jordan's side hustle income. No taxes withheld!",
-                            warning: "This $3,200 will be taxed heavily. But there's a way to reduce it..."
-                        }
-                    }
+                name: "Jordan Chen",
+                story: "Jordan has a coffee shop job ($8,500 W-2) AND freelance photos ($3,200 1099). Bought a $1,200 camera.",
+                docs: [
+                    { id: 'w2', name: 'W-2 Coffee', icon: '☕', correct: true },
+                    { id: '1099', name: '1099 Photo', icon: '📷', correct: true }
                 ],
                 deductions: [
-                    { 
-                        id: "camera", 
-                        name: "Camera Equipment", 
-                        desc: "$1,200 for photo business", 
-                        amount: 1200, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Camera used ONLY for the photography business.",
-                            keyPoint: "Business expenses reduce your taxable income!",
-                            rule: "Equipment used exclusively for business = deductible."
-                        }
-                    },
-                    { 
-                        id: "coffee", 
-                        name: "Daily Coffee", 
-                        desc: "Personal expense", 
-                        amount: 450, 
-                        legit: false, 
-                        auditRisk: "Personal expenses aren't deductible!",
-                        learnMore: {
-                            whyInvalid: "Jordan's daily coffee is personal, not business.",
-                            keyPoint: "Personal ≠ Business. Keep them separate!",
-                            warning: "Claiming personal expenses triggers audits."
-                        }
-                    }
+                    { id: 'cam', name: 'Camera', desc: 'Business equipment $1,200', amount: 1200, correct: true },
+                    { id: 'coffee', name: 'Coffee', desc: 'Daily coffee $450', amount: 450, correct: false, audit: true }
                 ],
-                correctDocs: ["w2", "1099"],
-                correctDeductions: ["camera"],
-                tips: [
-                    "Business equipment is deductible. Personal stuff is NOT.",
-                    "Camera for photos? Deductible. Coffee? Nope."
-                ],
-                learned: [
-                    "Business expenses reduce your taxable income",
-                    "Equipment used only for business is deductible",
-                    "Personal expenses are NEVER deductible",
-                    "W-2 + 1099 = you have both employee and self-employment income"
-                ],
-                baseRefund: 0,
-                timeLimit: 90
+                refund: 0,
+                time: 90
             },
             5: {
-                client: {
-                    name: "Riley Park",
-                    job: "Tutor + Driver",
-                    avatar: "🚗",
-                    story: "Riley tutors math ($5,000 on 1099) and drives for a tutoring company. Drove 600 miles between student houses. Learn the mileage deduction!"
-                },
-                documents: [
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC Tutoring", 
-                        icon: "📚", 
-                        desc: "$5,000 income",
-                        learnMore: {
-                            what: "Riley's tutoring income. No withholding!",
-                            keyPoint: "Riley drove between students - that's business mileage!"
-                        }
-                    }
-                ],
+                name: "Riley Park",
+                story: "Riley tutors math ($5,000 1099) and drove 600 miles between students. Learn the mileage deduction!",
+                docs: [{ id: '1099', name: '1099 Tutoring', icon: '📚', correct: true }],
                 deductions: [
-                    { 
-                        id: "miles", 
-                        name: "Mileage Deduction", 
-                        desc: "600 miles @ $0.67/mile", 
-                        amount: 402, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Driving between tutoring jobs is BUSINESS mileage.",
-                            keyPoint: "Standard rate: 67¢ per mile in 2024.",
-                            proTip: "Track EVERY trip! Apps like Everlance make this easy."
-                        }
-                    },
-                    { 
-                        id: "commute", 
-                        name: "Home to First Student", 
-                        desc: "Daily commute", 
-                        amount: 850, 
-                        legit: false, 
-                        auditRisk: "Commuting isn't deductible!",
-                        learnMore: {
-                            whyInvalid: "Driving from home to your first job is COMMUTING.",
-                            keyPoint: "Commuting = personal. Between jobs = business.",
-                            rule: "Home to work = not deductible. Work to work = deductible!"
-                        }
-                    }
+                    { id: 'miles', name: 'Mileage', desc: '600 miles x $0.67', amount: 402, correct: true },
+                    { id: 'commute', name: 'Commute', desc: 'Home to work', amount: 850, correct: false, audit: true }
                 ],
-                correctDocs: ["1099"],
-                correctDeductions: ["miles"],
-                tips: [
-                    "Track mileage between clients - it's deductible!",
-                    "Commuting from home doesn't count."
-                ],
-                learned: [
-                    "Business mileage between jobs is deductible",
-                    "Commuting from home is NOT deductible",
-                    "Standard mileage rate: 67¢/mile in 2024",
-                    "Use apps to track miles - don't guess!"
-                ],
-                baseRefund: 0,
-                timeLimit: 90
+                refund: 0,
+                time: 90
             },
             6: {
-                client: {
-                    name: "Casey Blake",
-                    job: "Social Media Manager",
-                    avatar: "📱",
-                    story: "Casey has 1099 income ($12,000) and wants to claim every deduction possible. Some are legit, some are RED FLAGS. Learn to spot audit risks!"
-                },
-                documents: [
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC", 
-                        icon: "📱", 
-                        desc: "$12,000 income",
-                        learnMore: {
-                            what: "Casey's social media management income.",
-                            warning: "High 1099 income + sketchy deductions = AUDIT RISK!"
-                        }
-                    }
-                ],
+                name: "Casey Blake",
+                story: "Casey has $12,000 in 1099 income. Some deductions look suspicious. Learn to spot red flags!",
+                docs: [{ id: '1099', name: '1099 Income', icon: '📱', correct: true }],
                 deductions: [
-                    { 
-                        id: "phone", 
-                        name: "Phone (Business %)", 
-                        desc: "60% business use", 
-                        amount: 540, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Casey uses phone for client calls and posting.",
-                            keyPoint: "Estimate actual business %. Document your reasoning.",
-                            proTip: "Track usage for a week to get a realistic %."
-                        }
-                    },
-                    { 
-                        id: "roundnums", 
-                        name: ""Round" Expenses", 
-                        desc: "Exactly $1,000 each", 
-                        amount: 3000, 
-                        legit: false, 
-                        auditRisk: "Round numbers trigger audits!",
-                        learnMore: {
-                            whyInvalid: "Exactly $1,000 for three expenses? Too round.",
-                            keyPoint: "Real expenses aren't perfectly round.",
-                            warning: "This is a MAJOR audit red flag!"
-                        }
-                    },
-                    { 
-                        id: "clothes", 
-                        name: "Work Clothes", 
-                        desc: "Regular clothing", 
-                        amount: 800, 
-                        legit: false, 
-                        auditRisk: "Regular clothes aren't deductible!",
-                        learnMore: {
-                            whyInvalid: "Casey's normal clothes aren't deductible.",
-                            exception: "Only REQUIRED uniforms with logo OR safety gear.",
-                            warning: "Clothing deductions are heavily scrutinized."
-                        }
-                    }
+                    { id: 'phone', name: 'Phone 60%', desc: 'Business use $540', amount: 540, correct: true },
+                    { id: 'round', name: 'Round Numbers', desc: 'Exactly $1,000 x3', amount: 3000, correct: false, audit: true },
+                    { id: 'clothes', name: 'Work Clothes', desc: 'Regular clothes $800', amount: 800, correct: false, audit: true }
                 ],
-                correctDocs: ["1099"],
-                correctDeductions: ["phone"],
-                tips: [
-                    "Round numbers = instant audit flag.",
-                    "Regular clothes aren't deductible. Be honest!"
-                ],
-                learned: [
-                    "Round numbers are an audit red flag",
-                    "Regular work clothes are NOT deductible",
-                    "Required uniforms with logos ARE deductible",
-                    "Be honest - audits are stressful and expensive"
-                ],
-                baseRefund: 0,
-                timeLimit: 90
+                refund: 0,
+                time: 90
             },
             7: {
-                client: {
-                    name: "Sam Torres",
-                    job: "Gig Worker",
-                    avatar: "🚗",
-                    story: "Sam drives Uber ($18,000) and delivers DoorDash ($8,500). Multiple 1099s! Plus vehicle expenses. Learn to handle gig economy taxes!"
-                },
-                documents: [
-                    { 
-                        id: "uber", 
-                        name: "1099-K Uber", 
-                        icon: "🚗", 
-                        desc: "$18,000 rideshare",
-                        learnMore: {
-                            what: "Uber reports GROSS payments (including Uber's cut).",
-                            keyPoint: "You'll deduct expenses to show actual profit.",
-                            warning: "1099-K numbers look scary - they're gross, not net!"
-                        }
-                    },
-                    { 
-                        id: "doordash", 
-                        name: "1099-NEC DD", 
-                        icon: "🍔", 
-                        desc: "$8,500 delivery",
-                        learnMore: {
-                            what: "DoorDash income. Another 1099 to track!",
-                            keyPoint: "Multiple gig apps = multiple 1099s."
-                        }
-                    }
+                name: "Sam Torres",
+                story: "Sam drives Uber ($18,000) and DoorDash ($8,500). Multiple 1099s and vehicle expenses!",
+                docs: [
+                    { id: 'uber', name: '1099-K Uber', icon: '🚗', correct: true },
+                    { id: 'dd', name: '1099-NEC DD', icon: '🍔', correct: true }
                 ],
                 deductions: [
-                    { 
-                        id: "vehicle", 
-                        name: "Vehicle Expenses", 
-                        desc: "Standard mileage", 
-                        amount: 4200, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Driving for Uber/DD requires a car. Biggest deduction!",
-                            twoMethods: "Standard mileage (67¢/mile) OR actual expenses.",
-                            proTip: "Track both all year, pick the bigger deduction!"
-                        }
-                    },
-                    { 
-                        id: "meals", 
-                        name: "All Meals", 
-                        desc: "Personal food", 
-                        amount: 2400, 
-                        legit: false, 
-                        auditRisk: "Only 50% of business meals!",
-                        learnMore: {
-                            whyInvalid: "Sam wants to deduct ALL meals. Nope!",
-                            rule: "Only BUSINESS meals, and only 50% deductible.",
-                            warning: "Personal meals are never deductible."
-                        }
-                    }
+                    { id: 'vehicle', name: 'Vehicle', desc: 'Standard mileage', amount: 4200, correct: true },
+                    { id: 'meals', name: 'All Meals', desc: 'Personal food', amount: 2400, correct: false, audit: true }
                 ],
-                correctDocs: ["uber", "doordash"],
-                correctDeductions: ["vehicle"],
-                tips: [
-                    "Multiple 1099s = track income from each app separately.",
-                    "Vehicle expenses are huge for gig workers. Track everything!"
-                ],
-                learned: [
-                    "Multiple gig apps = multiple 1099s",
-                    "1099-K shows gross payments, not profit",
-                    "Vehicle expenses: standard mileage OR actual costs",
-                    "Only business meals are 50% deductible"
-                ],
-                baseRefund: 0,
-                timeLimit: 105
+                refund: 0,
+                time: 105
             },
             8: {
-                client: {
-                    name: "Jordan Lee",
-                    job: "Crypto Trader",
-                    avatar: "₿",
-                    story: "Jordan traded crypto and lost $2,000. Has a 1099-B from the exchange. Learn how crypto losses actually HELP your taxes!"
-                },
-                documents: [
-                    { 
-                        id: "crypto", 
-                        name: "1099-B Crypto", 
-                        icon: "₿", 
-                        desc: "Trading activity",
-                        learnMore: {
-                            what: "Crypto is treated as PROPERTY by the IRS.",
-                            keyPoint: "Every trade/sale is a taxable event. But losses help!",
-                            silverLining: "Losses can offset gains AND up to $3,000 income!"
-                        }
-                    },
-                    { 
-                        id: "fake1", 
-                        name: "W-2", 
-                        icon: "📄", 
-                        desc: "Employer income", 
-                        fake: true,
-                        learnMore: {
-                            whyFake: "Jordan only traded crypto. No regular job.",
-                            keyPoint: "File what you have. Don't invent documents!"
-                        }
-                    }
-                ],
+                name: "Jordan Lee",
+                story: "Jordan traded crypto and LOST $2,000. Learn how losses can actually HELP your taxes!",
+                docs: [{ id: 'crypto', name: '1099-B Crypto', icon: '₿', correct: true }],
                 deductions: [
-                    { 
-                        id: "cryptoloss", 
-                        name: "Crypto Losses", 
-                        desc: "Up to $3,000 deductible", 
-                        amount: 2000, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Capital losses are deductible just like stock losses.",
-                            keyPoint: "Up to $3,000 can offset regular income per year.",
-                            carryover: "Extra losses carry forward to next year!"
-                        }
-                    },
-                    { 
-                        id: "ignore", 
-                        name: "Ignore Crypto Loss", 
-                        desc: "Don't report it", 
-                        amount: 0, 
-                        legit: false, 
-                        auditRisk: "The IRS knows!",
-                        learnMore: {
-                            whyInvalid: "Exchanges report to the IRS. They KNOW about the trades.",
-                            keyPoint: "Not reporting = tax evasion. Big penalties.",
-                            warning: "Always report crypto. The IRS is watching."
-                        }
-                    }
+                    { id: 'loss', name: 'Crypto Loss', desc: 'Deduct up to $3,000', amount: 2000, correct: true },
+                    { id: 'ignore', name: 'Hide Loss', desc: 'Do not report', amount: 0, correct: false, audit: true }
                 ],
-                correctDocs: ["crypto"],
-                correctDeductions: ["cryptoloss"],
-                tips: [
-                    "Crypto losses can save you money on taxes!",
-                    "Exchanges report to the IRS - don't hide crypto activity."
-                ],
-                learned: [
-                    "Crypto is taxed as property (not currency)",
-                    "Every crypto trade/sale is a taxable event",
-                    "Crypto losses can offset up to $3,000 of regular income",
-                    "Exchanges report to the IRS - always report crypto"
-                ],
-                baseRefund: 0,
-                timeBonus: false,
-                timeLimit: 90
+                refund: 0,
+                time: 90
             },
             9: {
-                client: {
-                    name: "Alex Rivera (Advanced)",
-                    job: "The Full Picture",
-                    avatar: "🏆",
-                    story: "Alex is back! Now a senior in college with: lifeguard W-2 ($3,200), freelance web design 1099 ($8,500), crypto trading (lost $1,500), and drove 800 miles for clients. The ULTIMATE test!"
-                },
-                documents: [
-                    { 
-                        id: "w2", 
-                        name: "W-2 Pool", 
-                        icon: "🏊", 
-                        desc: "$3,200 wages",
-                        learnMore: {
-                            what: "Alex still lifeguards part-time. W-2 income.",
-                            keyPoint: "Employer already withheld some taxes."
-                        }
-                    },
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC Design", 
-                        icon: "💻", 
-                        desc: "$8,500 freelance",
-                        learnMore: {
-                            what: "Alex's web design side hustle. Major income!",
-                            warning: "No withholding on this $8,500. Big tax bill incoming..."
-                        }
-                    },
-                    { 
-                        id: "crypto", 
-                        name: "1099-B Crypto", 
-                        icon: "₿", 
-                        desc: "Trading losses",
-                        learnMore: {
-                            what: "Alex dabbled in crypto and lost money.",
-                            keyPoint: "Losses can offset other income! Silver lining."
-                        }
-                    }
+                name: "Alex Rivera (Graduated)",
+                story: "The ultimate test! Alex has W-2 income, 1099 design work, crypto losses, and drove 800 miles.",
+                docs: [
+                    { id: 'w2', name: 'W-2 Pool', icon: '🏊', correct: true },
+                    { id: '1099', name: '1099 Design', icon: '💻', correct: true },
+                    { id: 'crypto', name: '1099-B Crypto', icon: '₿', correct: true }
                 ],
                 deductions: [
-                    { 
-                        id: "miles", 
-                        name: "Mileage", 
-                        desc: "800 business miles", 
-                        amount: 536, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Driving to client meetings.",
-                            calculation: "800 miles × $0.67 = $536 deduction!"
-                        }
-                    },
-                    { 
-                        id: "laptop", 
-                        name: "Laptop", 
-                        desc: "$1,200 for design work", 
-                        amount: 1200, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Computer used for web design business.",
-                            keyPoint: "Business equipment is deductible."
-                        }
-                    },
-                    { 
-                        id: "crypto", 
-                        name: "Crypto Losses", 
-                        desc: "$1,500 capital loss", 
-                        amount: 1500, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Capital losses offset other income.",
-                            keyPoint: "Up to $3,000 per year deductible!"
-                        }
-                    },
-                    { 
-                        id: "rent", 
-                        name: "Home Office", 
-                        desc: "20% of rent", 
-                        amount: 2400, 
-                        legit: false, 
-                        auditRisk: "Alex doesn't qualify!",
-                        learnMore: {
-                            whyInvalid: "Alex works from bedroom (personal use too).",
-                            keyPoint: "Home office must be REGULAR and EXCLUSIVE.",
-                            warning: "This is a major audit trigger. Skip it!"
-                        }
-                    }
+                    { id: 'miles', name: 'Mileage', desc: '800 miles', amount: 536, correct: true },
+                    { id: 'laptop', name: 'Laptop', desc: '$1,200 for work', amount: 1200, correct: true },
+                    { id: 'crypto', name: 'Crypto Loss', desc: '$1,500 loss', amount: 1500, correct: true },
+                    { id: 'office', name: 'Home Office', desc: '20% of rent', amount: 2400, correct: false, audit: true }
                 ],
-                correctDocs: ["w2", "1099", "crypto"],
-                correctDeductions: ["miles", "laptop", "crypto"],
-                tips: [
-                    "Combine everything you've learned!",
-                    "When in doubt, leave sketchy deductions out."
-                ],
-                learned: [
-                    "Complex returns combine multiple income types",
-                    "Each income type has different tax rules",
-                    "When unsure, skip questionable deductions",
-                    "Honest filing > aggressive deductions"
-                ],
-                baseRefund: 0,
-                timeLimit: 120
-            }
-            2: {
-                client: {
-                    name: "Jordan Chen",
-                    job: "Barista + Photographer",
-                    avatar: "☕",
-                    story: "Jordan worked part-time at a coffee shop (W-2: $8,500) AND did freelance photography on weekends (1099: $3,200). Bought a $1,200 camera for the photo business and drove 400 miles for shoots.",
-                    learningGoal: "Understand self-employment income and legitimate business deductions."
-                },
-                documents: [
-                    { 
-                        id: "w2", 
-                        name: "W-2 Coffee Shop", 
-                        icon: "☕", 
-                        desc: "$8,500 wages",
-                        learnMore: {
-                            what: "Jordan's employee wages from the coffee shop.",
-                            taxImpact: "Employer already withheld taxes. Jordan may owe more because of the 1099 income.",
-                            proTip: "Having both W-2 and 1099 income is common for side hustlers."
-                        }
-                    },
-                    { 
-                        id: "1099", 
-                        name: "1099-NEC Photo", 
-                        icon: "📷", 
-                        desc: "$3,200 freelance",
-                        learnMore: {
-                            what: "Income from photography clients who paid Jordan as a contractor.",
-                            taxImpact: "No taxes were withheld. Jordan owes income tax PLUS 15.3% self-employment tax.",
-                            proTip: "Set aside 25-30% of all 1099 income for taxes!"
-                        }
-                    },
-                    { 
-                        id: "fake1", 
-                        name: "1099-DIV", 
-                        icon: "📊", 
-                        desc: "Investment income", 
-                        fake: true,
-                        learnMore: {
-                            what: "1099-DIV reports dividends from stocks or investments.",
-                            whyFake: "Jordan has no investment account. Don't file forms you don't have!",
-                            proTip: "Only file forms that were actually sent to you AND the IRS."
-                        }
-                    }
-                ],
-                deductions: [
-                    { 
-                        id: "camera", 
-                        name: "Camera Equipment", 
-                        desc: "Business equipment over $600", 
-                        amount: 1200, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Camera used exclusively for photography business. Equipment over $600 is a legitimate business expense.",
-                            irsRules: "Business equipment can be deducted in full OR depreciated over several years.",
-                            documentation: "Keep the receipt! The IRS can ask for proof up to 3 years later."
-                        }
-                    },
-                    { 
-                        id: "miles", 
-                        name: "Mileage Deduction", 
-                        desc: "400 miles @ $0.67/mile", 
-                        amount: 268, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Driving to photo shoots is business mileage. Personal commuting doesn't count.",
-                            irsRules: "Standard mileage rate changes yearly (67¢/mile in 2024).",
-                            documentation: "Track every trip: date, destination, purpose, miles. Apps make this easy."
-                        }
-                    },
-                    { 
-                        id: "coffee", 
-                        name: "Daily Coffee", 
-                        desc: "Personal expense", 
-                        amount: 450, 
-                        legit: false, 
-                        auditRisk: "Personal expenses aren't deductible!",
-                        learnMore: {
-                            whyInvalid: "Daily coffee is a personal expense, even if you drink it while working.",
-                            exception: "Coffee for clients during business meetings IS deductible (50% only).",
-                            auditRisk: "Claiming personal expenses is a fast track to an audit."
-                        }
-                    },
-                    { 
-                        id: "clothes", 
-                        name: "Work Clothes", 
-                        desc: "Regular clothing", 
-                        amount: 200, 
-                        legit: false, 
-                        auditRisk: "Unless required uniform, not deductible!",
-                        learnMore: {
-                            whyInvalid: "Regular clothes you could wear outside work aren't deductible.",
-                            exception: "Required uniforms with company logo OR specialized safety gear IS deductible.",
-                            realWorld: "A photographer's normal clothes? Not deductible. A branded vest? Maybe."
-                        }
-                    }
-                ],
-                correctDocs: ["w2", "1099"],
-                correctDeductions: ["camera", "miles"],
-                tips: [
-                    "1099 income means you're self-employed - you can deduct business expenses!",
-                    "Keep receipts for anything over $75. The IRS loves documentation.",
-                    "Home office deduction? Only if it's used EXCLUSIVELY for business."
-                ],
-                learned: [
-                    "1099 income has NO tax withheld - you owe it all at tax time",
-                    "Self-employment tax is 15.3% on top of income tax",
-                    "Business equipment used exclusively for work is deductible",
-                    "Mileage for business trips is deductible (not commuting)",
-                    "Personal expenses are NEVER deductible",
-                    "Regular work clothes aren't deductible - uniforms with logos are"
-                ],
-                baseRefund: 0,
-                timeLimit: 90
-            },
-            3: {
-                client: {
-                    name: "Sam Torres",
-                    job: "Gig Worker + Trader",
-                    avatar: "🚗",
-                    story: "Sam drives Uber ($18,000), delivers DoorDash ($8,500), trades crypto (lost $2,000), and tutors online ($4,200). Has vehicle expenses, phone bills, and wants to claim home office. Complex situation!",
-                    learningGoal: "Master multiple income streams, crypto taxes, and avoid audit red flags."
-                },
-                documents: [
-                    { 
-                        id: "uber", 
-                        name: "1099-K Uber", 
-                        icon: "🚗", 
-                        desc: "$18,000 rideshare",
-                        learnMore: {
-                            what: "Payment card/third-party network income. Rideshare and delivery apps use this.",
-                            taxImpact: "Gross payments reported - you deduct expenses to show actual profit.",
-                            proTip: "1099-K reports TOTAL payments including fees. Don't panic at the big number!"
-                        }
-                    },
-                    { 
-                        id: "doordash", 
-                        name: "1099-NEC DD", 
-                        icon: "🍔", 
-                        desc: "$8,500 delivery",
-                        learnMore: {
-                            what: "Non-employee compensation from delivery work.",
-                            taxImpact: "Combined with Uber income, Sam owes significant self-employment tax.",
-                            proTip: "Multiple gig apps = multiple 1099s. Track income from each separately."
-                        }
-                    },
-                    { 
-                        id: "tutor", 
-                        name: "1099-NEC Tutor", 
-                        icon: "📚", 
-                        desc: "$4,200 tutoring",
-                        learnMore: {
-                            what: "Online tutoring income. Another 1099 because Sam is an independent contractor.",
-                            taxImpact: "More self-employment income. The home office deduction makes sense here.",
-                            proTip: "Having multiple income streams is great - just track them all!"
-                        }
-                    },
-                    { 
-                        id: "crypto", 
-                        name: "1099-B Crypto", 
-                        icon: "₿", 
-                        desc: "Trading activity",
-                        learnMore: {
-                            what: "Broker reports crypto sales and trades to the IRS.",
-                            taxImpact: "Crypto is property, not currency. Every trade is a taxable event.",
-                            proTip: "Losses can offset gains AND up to $3,000 of other income. Silver lining!"
-                        }
-                    }
-                ],
-                deductions: [
-                    { 
-                        id: "vehicle", 
-                        name: "Vehicle Expenses", 
-                        desc: "Standard mileage or actual costs", 
-                        amount: 4200, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Uber and DoorDash require driving. Vehicle costs are a major business expense.",
-                            twoMethods: "Standard mileage (67¢/mile) OR actual expenses (gas, insurance, maintenance, depreciation).",
-                            proTip: "Track both all year, then choose whichever gives the bigger deduction!"
-                        }
-                    },
-                    { 
-                        id: "phone", 
-                        name: "Phone & Internet", 
-                        desc: "Business percentage (60%)", 
-                        amount: 720, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Gig apps require phone. Tutoring requires internet. Business use is deductible.",
-                            irsRules: "Deduct the business percentage (track actual usage for a sample week).",
-                            proTip: "60% is reasonable if you use phone mainly for gig work. Document your reasoning."
-                        }
-                    },
-                    { 
-                        id: "homeoffice", 
-                        name: "Home Office", 
-                        desc: "20% of home expenses", 
-                        amount: 2400, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Online tutoring requires a dedicated workspace. Sam has a separate room used only for this.",
-                            irsRules: "Must be REGULAR and EXCLUSIVE use for business. No personal use allowed.",
-                            auditRisk: "This is a major audit trigger. Only claim if you legitimately qualify!"
-                        }
-                    },
-                    { 
-                        id: "crypto", 
-                        name: "Crypto Losses", 
-                        desc: "Up to $3,000 deductible", 
-                        amount: 2000, 
-                        legit: true,
-                        learnMore: {
-                            whyValid: "Crypto losses are real capital losses. You can deduct them just like stock losses.",
-                            taxStrategy: "Up to $3,000 can offset ordinary income. Excess carries forward to next year.",
-                            proTip: "Tax-loss harvesting: sell losers to offset gains and reduce your tax bill."
-                        }
-                    },
-                    { 
-                        id: "meals", 
-                        name: "All Meals", 
-                        desc: "Only 50% of business meals", 
-                        amount: 1800, 
-                        legit: false, 
-                        auditRisk: "Only business meals are deductible, and only 50%!",
-                        learnMore: {
-                            whyInvalid: "Sam wants to deduct ALL meals. Only BUSINESS meals qualify, and only 50%.",
-                            irsRules: "Business meals require: business purpose, receipt, not lavish, you or employee present.",
-                            auditRisk: "Meals are heavily scrutinized. Personal meals are NEVER deductible."
-                        }
-                    },
-                    { 
-                        id: "personal", 
-                        name: "Personal Deduction", 
-                        desc: "Questionable write-off", 
-                        amount: 5000, 
-                        legit: false, 
-                        auditRisk: "This would definitely trigger an audit!",
-                        learnMore: {
-                            whyInvalid: "Vague 'personal deduction' with no business purpose is straight-up tax fraud.",
-                            consequences: "IRS penalties: 20% accuracy penalty + interest. Possible criminal charges.",
-                            realWorld: "If it sounds too good to be true, it is. Legitimate deductions have clear business purposes."
-                        }
-                    }
-                ],
-                correctDocs: ["uber", "doordash", "tutor", "crypto"],
-                correctDeductions: ["vehicle", "phone", "homeoffice", "crypto"],
-                tips: [
-                    "Multiple 1099s? You're self-employed - pay quarterly taxes to avoid penalties!",
-                    "Crypto losses can offset gains AND up to $3,000 of regular income.",
-                    "Track mileage EVERY day. Estimates don't fly with the IRS.",
-                    "Home office must be regular AND exclusive use to qualify."
-                ],
-                learned: [
-                    "Multiple gig apps = multiple 1099s to track",
-                    "1099-K reports gross payments, not profit",
-                    "Vehicle expenses: choose standard mileage OR actual expenses",
-                    "Home office deduction is powerful but heavily audited",
-                    "Crypto is taxed as property - every trade is a taxable event",
-                    "Capital losses can offset gains and up to $3,000 of income",
-                    "Questionable deductions can trigger penalties and interest"
-                ],
-                baseRefund: 0,
-                timeLimit: 120
+                refund: 0,
+                time: 120
             }
         };
 
-        // Initialize
+        // GAME STATE
+        let state = {
+            score: 0,
+            unlocked: [1, 2, 3],
+            completed: [],
+            current: null,
+            selectedDocs: new Set(),
+            selectedDeducts: new Set(),
+            timer: null,
+            timeLeft: 0
+        };
+
+        // INITIALIZE
         function init() {
-            loadProgress();
-            updateLevelCards();
+            renderLevels();
+            setupEventListeners();
         }
 
-        function loadProgress() {
-            // Clear any corrupt localStorage
-            try {
-                const saved = localStorage.getItem('taxHeroProgress');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    gameState.totalScore = data.totalScore || 0;
-                    gameState.unlockedLevels = data.unlockedLevels || [1, 2, 3];
-                    gameState.completedLevels = data.completedLevels || [];
-                }
-            } catch (e) {
-                console.log('Resetting progress due to error');
-                localStorage.removeItem('taxHeroProgress');
-                localStorage.removeItem('taxHeroGlossary');
-            }
-            document.getElementById('totalScore').textContent = gameState.totalScore;
+        function renderLevels() {
+            const list = document.getElementById('levelsList');
+            list.innerHTML = '';
             
-            // Load glossary progress
-            const glossarySaved = localStorage.getItem('taxHeroGlossary');
-            if (glossarySaved) {
-                try {
-                    taxKnowledge.unlocked = JSON.parse(glossarySaved);
-                } catch (e) {
-                    taxKnowledge.unlocked = [];
-                }
-            }
-        }
-
-        function saveProgress() {
-            localStorage.setItem('taxHeroProgress', JSON.stringify({
-                totalScore: gameState.totalScore,
-                unlockedLevels: gameState.unlockedLevels,
-                completedLevels: gameState.completedLevels
-            }));
-        }
-
-        function updateLevelCards() {
-            document.querySelectorAll('.level-card').forEach(card => {
-                const level = parseInt(card.dataset.level);
-                card.classList.remove('locked', 'completed');
-                
-                if (gameState.completedLevels.includes(level)) {
-                    card.classList.add('completed');
-                } else if (!gameState.unlockedLevels.includes(level)) {
-                    card.classList.add('locked');
-                    // Don't remove onclick - let the startLevel function handle locking
-                }
-            });
-        }
-
-        // Level Management
-        function startLevel(levelNum) {
-            console.log('Clicked level:', levelNum, 'Unlocked:', gameState.unlockedLevels);
-            if (!gameState.unlockedLevels.includes(levelNum)) {
-                console.log('Level locked!');
-                return;
-            }
-            
-            gameState.currentLevel = levelNum;
-            gameState.levelData = levels[levelNum];
-            gameState.selectedDocs.clear();
-            gameState.selectedDeductions.clear();
-            gameState.tutorialStep = 0;
-            
-            // Show level progress
-            document.getElementById('levelProgress').textContent = `Level ${levelNum} of 9`;
-            document.getElementById('levelProgress').classList.add('active');
-            
-            // Setup game screen
-            setupGameScreen();
-            
-            // Switch screens
-            showScreen('gameScreen');
-            
-            // Start tutorial if level has one
-            if (gameState.levelData.tutorial) {
-                gameState.tutorialActive = true;
-                showTutorialStep();
-            } else {
-                // Start timer
-                startTimer(gameState.levelData.timeLimit);
-                showRandomTip();
-            }
-        }
-
-        // Tutorial Functions
-        function showTutorialStep() {
-            const steps = gameState.levelData.tutorialSteps;
-            if (!steps || gameState.tutorialStep >= steps.length) {
-                // Tutorial done
-                document.getElementById('tutorialOverlay').classList.remove('active');
-                gameState.tutorialActive = false;
-                // Start timer
-                startTimer(gameState.levelData.timeLimit);
-                showRandomTip();
-                return;
-            }
-            
-            const step = steps[gameState.tutorialStep];
-            document.getElementById('tutorialText').textContent = step.text;
-            document.getElementById('tutorialOverlay').classList.add('active');
-        }
-
-        function nextTutorialStep() {
-            gameState.tutorialStep++;
-            showTutorialStep();
-        }
-
-        function setupGameScreen() {
-            const data = gameState.levelData;
-            
-            // Client info
-            document.getElementById('clientAvatar').textContent = data.client.avatar;
-            document.getElementById('clientName').textContent = data.client.name;
-            document.getElementById('clientJob').textContent = data.client.job;
-            document.getElementById('clientStory').textContent = data.client.story;
-            
-            // Documents
-            const docsGrid = document.getElementById('documentsGrid');
-            docsGrid.innerHTML = '';
-            data.documents.forEach(doc => {
-                const wrapper = document.createElement('div');
+            for (let i = 1; i <= 9; i++) {
+                const lvl = LEVELS[i];
+                const locked = !state.unlocked.includes(i);
+                const completed = state.completed.includes(i);
                 
                 const card = document.createElement('div');
-                card.className = 'document-card';
-                card.dataset.docId = doc.id;
-                card.innerHTML = `
-                    <div class="document-icon">${doc.icon}</div>
-                    <div class="document-name">${doc.name}</div>
-                `;
-                card.onclick = () => toggleDocument(doc.id, card);
-                
-                wrapper.appendChild(card);
-                
-                // Add Learn More button if available
-                if (doc.learnMore) {
-                    const infoBtn = document.createElement('button');
-                    infoBtn.className = 'info-button';
-                    infoBtn.textContent = 'Learn More';
-                    infoBtn.style.marginTop = '8px';
-                    infoBtn.style.width = '100%';
-                    infoBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        showLearnMore('doc', doc.id, wrapper);
-                    };
-                    wrapper.appendChild(infoBtn);
+                card.className = 'level-card' + (locked ? ' locked' : '');
+                if (!locked) {
+                    card.onclick = () => startLevel(i);
                 }
                 
-                docsGrid.appendChild(wrapper);
+                card.innerHTML = `
+                    <span class="level-num">${completed ? '✓' : '#' + i}</span>
+                    <h3>${lvl.name}</h3>
+                    <p>${lvl.story.substring(0, 60)}...</p>
+                `;
+                list.appendChild(card);
+            }
+        }
+
+        function startLevel(n) {
+            state.current = n;
+            state.selectedDocs.clear();
+            state.selectedDeducts.clear();
+            const lvl = LEVELS[n];
+            
+            // Setup screen
+            document.getElementById('clientName').textContent = lvl.name;
+            document.getElementById('clientStory').textContent = lvl.story;
+            
+            // Docs
+            const docsList = document.getElementById('docsList');
+            docsList.innerHTML = '';
+            lvl.docs.forEach(doc => {
+                const div = document.createElement('div');
+                div.className = 'doc-card';
+                div.innerHTML = `<div class="icon">${doc.icon}</div><div class="name">${doc.name}</div>`;
+                div.onclick = () => {
+                    div.classList.toggle('selected');
+                    if (state.selectedDocs.has(doc.id)) {
+                        state.selectedDocs.delete(doc.id);
+                    } else {
+                        state.selectedDocs.add(doc.id);
+                    }
+                };
+                docsList.appendChild(div);
             });
             
             // Deductions
-            const deducSection = document.getElementById('deductionsSection');
-            const deducList = document.getElementById('deductionsList');
+            const deductList = document.getElementById('deductList');
+            const deductTitle = document.getElementById('deductTitle');
+            deductList.innerHTML = '';
             
-            if (data.deductions && data.deductions.length > 0) {
-                deducSection.style.display = 'block';
-                deducList.innerHTML = '';
-                data.deductions.forEach(ded => {
-                    const wrapper = document.createElement('div');
-                    
-                    const item = document.createElement('div');
-                    item.className = 'deduction-item' + (ded.auditRisk ? ' audit-risk' : '');
-                    item.dataset.dedId = ded.id;
-                    item.innerHTML = `
-                        <div class="deduction-checkbox">✓</div>
+            if (lvl.deductions.length > 0) {
+                deductTitle.style.display = 'block';
+                lvl.deductions.forEach(d => {
+                    const div = document.createElement('div');
+                    div.className = 'deduction-item' + (d.audit ? ' audit' : '');
+                    div.innerHTML = `
+                        <div class="check"></div>
                         <div class="deduction-info">
-                            <div class="deduction-name">${ded.name}</div>
-                            <div class="deduction-desc">${ded.desc}</div>
-                            <div class="audit-warning">⚠️ ${ded.auditRisk}</div>
+                            <h4>${d.name}</h4>
+                            <p>${d.desc}</p>
+                            <div class="audit-warning">⚠️ Audit risk!</div>
                         </div>
-                        <div class="deduction-amount">$${ded.amount.toLocaleString()}</div>
+                        <div class="deduction-amt">$${d.amount}</div>
                     `;
-                    item.onclick = () => toggleDeduction(ded.id, item);
-                    
-                    wrapper.appendChild(item);
-                    
-                    // Add Learn More button if available
-                    if (ded.learnMore) {
-                        const infoBtn = document.createElement('button');
-                        infoBtn.className = 'info-button';
-                        infoBtn.textContent = 'Learn More';
-                        infoBtn.style.marginTop = '6px';
-                        infoBtn.style.width = '100%';
-                        infoBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            showLearnMore('deduction', ded.id, wrapper);
-                        };
-                        wrapper.appendChild(infoBtn);
-                    }
-                    
-                    deducList.appendChild(wrapper);
+                    div.onclick = () => {
+                        div.classList.toggle('selected');
+                        if (state.selectedDeducts.has(d.id)) {
+                            state.selectedDeducts.delete(d.id);
+                        } else {
+                            state.selectedDeducts.add(d.id);
+                        }
+                    };
+                    deductList.appendChild(div);
                 });
             } else {
-                deducSection.style.display = 'none';
+                deductTitle.style.display = 'none';
             }
             
-            // Reset UI
-            document.getElementById('timerFill').style.width = '100%';
-            document.getElementById('timerFill').classList.remove('warning');
-            document.getElementById('moneybotTip').style.display = 'none';
-        }
-
-        function toggleDocument(docId, card) {
-            if (gameState.selectedDocs.has(docId)) {
-                gameState.selectedDocs.delete(docId);
-                card.classList.remove('selected');
-            } else {
-                gameState.selectedDocs.add(docId);
-                card.classList.add('selected');
-                createParticles(card);
-            }
-        }
-
-        function toggleDeduction(dedId, item) {
-            if (gameState.selectedDeductions.has(dedId)) {
-                gameState.selectedDeductions.delete(dedId);
-                item.classList.remove('selected');
-            } else {
-                gameState.selectedDeductions.add(dedId);
-                item.classList.add('selected');
-                createParticles(item);
-                
-                // Show tip if audit risk
-                const deduction = gameState.levelData.deductions.find(d => d.id === dedId);
-                if (deduction && !deduction.legit) {
-                    showTip(deduction.auditRisk);
-                }
-            }
-        }
-
-        function showRandomTip() {
-            const tips = gameState.levelData.tips;
-            const tip = tips[Math.floor(Math.random() * tips.length)];
-            showTip(tip);
-        }
-
-        function showTip(text) {
-            const tipEl = document.getElementById('moneybotTip');
-            document.getElementById('tipText').textContent = text;
-            tipEl.style.display = 'flex';
-        }
-
-        // Timer
-        function startTimer(seconds) {
-            gameState.maxTime = seconds;
-            gameState.timeLeft = seconds;
-            
-            if (gameState.timer) clearInterval(gameState.timer);
-            
-            gameState.timer = setInterval(() => {
-                gameState.timeLeft--;
-                const pct = (gameState.timeLeft / gameState.maxTime) * 100;
-                const timerFill = document.getElementById('timerFill');
-                timerFill.style.width = pct + '%';
-                
-                if (pct < 30) {
-                    timerFill.classList.add('warning');
-                }
-                
-                if (gameState.timeLeft <= 0) {
-                    clearInterval(gameState.timer);
-                    showModal('⏰', 'Time\'s Up!', 'The deadline passed! Your client got a penalty for late filing.', () => {
-                        fileReturn(true);
-                    });
+            // Timer
+            state.timeLeft = lvl.time;
+            updateTimer();
+            if (state.timer) clearInterval(state.timer);
+            state.timer = setInterval(() => {
+                state.timeLeft--;
+                updateTimer();
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timer);
+                    fileReturn();
                 }
             }, 1000);
+            
+            showScreen('gameScreen');
         }
 
-        // Filing
-        function fileReturn(timeExpired = false) {
-            clearInterval(gameState.timer);
+        function updateTimer() {
+            const pct = (state.timeLeft / LEVELS[state.current].time) * 100;
+            document.getElementById('timerFill').style.width = pct + '%';
+        }
+
+        function fileReturn() {
+            if (state.timer) clearInterval(state.timer);
+            const lvl = LEVELS[state.current];
             
-            const data = gameState.levelData;
+            // Calculate score
             let score = 0;
             let correctDocs = 0;
-            let totalDeductions = 0;
+            let correctDeducts = 0;
             let auditRisk = 0;
-            let mistakes = [];
             
-            // Check documents
-            data.correctDocs.forEach(docId => {
-                if (gameState.selectedDocs.has(docId)) {
-                    correctDocs++;
+            // Check docs
+            lvl.docs.forEach(d => {
+                if (d.correct && state.selectedDocs.has(d.id)) {
                     score += 100;
-                } else {
-                    mistakes.push(`Missed required document: ${docId.toUpperCase()}`);
-                }
-            });
-            
-            // Check for fake docs selected
-            gameState.selectedDocs.forEach(docId => {
-                if (!data.correctDocs.includes(docId)) {
+                    correctDocs++;
+                } else if (!d.correct && state.selectedDocs.has(d.id)) {
                     score -= 50;
-                    mistakes.push(`Filed fake document: ${docId.toUpperCase()}`);
-                    auditRisk += 1;
+                    auditRisk++;
                 }
             });
             
             // Check deductions
-            if (data.deductions) {
-                data.deductions.forEach(ded => {
-                    if (gameState.selectedDeductions.has(ded.id)) {
-                        if (ded.legit) {
-                            score += 50;
-                            totalDeductions += ded.amount;
-                        } else {
-                            score -= 100;
-                            auditRisk += 2;
-                            mistakes.push(`Claimed invalid deduction: ${ded.name}`);
-                        }
-                    } else if (ded.legit && data.correctDeductions.includes(ded.id)) {
-                        mistakes.push(`Missed legitimate deduction: ${ded.name}`);
-                    }
-                });
-            }
+            lvl.deductions.forEach(d => {
+                if (d.correct && state.selectedDeducts.has(d.id)) {
+                    score += 50;
+                    correctDeducts++;
+                } else if (!d.correct && state.selectedDeducts.has(d.id)) {
+                    score -= 100;
+                    auditRisk += 2;
+                }
+            });
             
             // Time bonus
-            const timeBonus = timeExpired ? 0 : Math.floor(gameState.timeLeft * 2);
-            score += timeBonus;
-            
-            // Base refund calculation
-            let refund = data.baseRefund || Math.floor(totalDeductions * 0.15);
-            
-            // Audit check
-            const auditTriggered = auditRisk >= 2 || (auditRisk > 0 && Math.random() < 0.3);
+            score += state.timeLeft * 2;
             
             // Results
-            let resultType = 'success';
-            if (auditTriggered) {
-                resultType = 'audit';
-                refund = Math.floor(refund * 0.5); // Audit penalties
-            } else if (correctDocs < data.correctDocs.length) {
-                resultType = 'incomplete';
-            }
+            const audited = auditRisk >= 2;
+            let status = 'Perfect!';
+            if (audited) status = 'AUDIT!';
+            else if (score < 100) status = 'Incomplete';
+            
+            document.getElementById('resStatus').textContent = status;
+            document.getElementById('resStatus').className = 'result-value ' + (audited ? 'bad' : 'good');
+            document.getElementById('resDocs').textContent = `${correctDocs}/${lvl.docs.filter(d => d.correct).length}`;
+            document.getElementById('resDeduct').textContent = `$${correctDeducts * 100}`;
+            document.getElementById('resRefund').textContent = `$${audited ? Math.floor(lvl.refund * 0.5) : lvl.refund}`;
+            document.getElementById('resScore').textContent = Math.max(0, score);
             
             // Save progress
-            if (resultType !== 'audit') {
-                if (!gameState.completedLevels.includes(gameState.currentLevel)) {
-                    gameState.completedLevels.push(gameState.currentLevel);
-                }
-                const nextLevel = gameState.currentLevel + 1;
-                if (nextLevel <= 3 && !gameState.unlockedLevels.includes(nextLevel)) {
-                    gameState.unlockedLevels.push(nextLevel);
+            if (!audited && !state.completed.includes(state.current)) {
+                state.completed.push(state.current);
+                const next = state.current + 1;
+                if (next <= 9 && !state.unlocked.includes(next)) {
+                    state.unlocked.push(next);
                 }
             }
+            state.score += Math.max(0, score);
+            document.getElementById('totalScore').textContent = state.score;
             
-            gameState.totalScore += Math.max(0, score);
-            saveProgress();
-            
-            // Show results
-            showResults(resultType, score, refund, timeBonus, totalDeductions, auditTriggered);
+            showScreen('resultScreen');
         }
 
-        function showResults(type, score, refund, timeBonus, deductions, auditTriggered) {
-            const icons = {
-                success: '🎉',
-                audit: '🔍',
-                incomplete: '⚠️'
-            };
-            const titles = {
-                success: 'Return Filed Successfully!',
-                audit: 'AUDIT TRIGGERED!',
-                incomplete: 'Return Incomplete'
-            };
-            const subtitles = {
-                success: 'Your client is getting a nice refund!',
-                audit: 'The IRS wants to take a closer look...',
-                incomplete: 'Some required documents were missing.'
-            };
-            
-            document.getElementById('resultIcon').textContent = icons[type];
-            document.getElementById('resultTitle').textContent = titles[type];
-            document.getElementById('resultSubtitle').textContent = subtitles[type];
-            
-            document.getElementById('statStatus').textContent = 'Single';
-            document.getElementById('statDocs').textContent = 
-                `${gameState.selectedDocs.size}/${gameState.levelData.correctDocs.length}`;
-            document.getElementById('statDeductions').textContent = `$${deductions.toLocaleString()}`;
-            document.getElementById('statRefund').textContent = `$${refund.toLocaleString()}`;
-            document.getElementById('statTime').textContent = `+${timeBonus}`;
-            document.getElementById('statRisk').textContent = auditTriggered ? 'HIGH ⚠️' : 'Low ✓';
-            document.getElementById('statRisk').className = 'stat-value ' + (auditTriggered ? 'negative' : 'positive');
-            document.getElementById('statScore').textContent = score;
-            
-            if (type === 'success') {
-                createConfetti();
-            }
-            
-            document.getElementById('totalScore').textContent = gameState.totalScore;
-            showScreen('resultsScreen');
-        }
-
-        // Navigation
-        function showScreen(screenId) {
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        function backToMenu() {
-            document.getElementById('levelProgress').classList.remove('active');
-            updateLevelCards();
-            showScreen('homeScreen');
-        }
-
-        // Modal
-        function showModal(icon, title, text, onConfirm) {
-            document.getElementById('modalIcon').textContent = icon;
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalText').textContent = text;
-            document.getElementById('modalConfirm').onclick = () => {
-                closeModal();
-                if (onConfirm) onConfirm();
+        function setupEventListeners() {
+            document.getElementById('fileBtn').onclick = fileReturn;
+            document.getElementById('continueBtn').onclick = () => {
+                renderLevels();
+                showScreen('homeScreen');
             };
-            document.getElementById('modal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-        }
-
-        // Educational Functions
-        function showLearnMore(type, id, element) {
-            const data = gameState.levelData;
-            let item, content;
-            
-            if (type === 'doc') {
-                item = data.documents.find(d => d.id === id);
-            } else {
-                item = data.deductions.find(d => d.id === id);
-            }
-            
-            if (!item || !item.learnMore) return;
-            
-            // Remove existing learn more panels
-            const existing = element.parentElement.querySelector('.learn-more-panel');
-            if (existing) {
-                existing.remove();
-                return;
-            }
-            
-            const panel = document.createElement('div');
-            panel.className = 'learn-more-panel';
-            
-            const lm = item.learnMore;
-            let html = '<div class="learn-more-header">💡 Learn More</div>';
-            
-            if (lm.what) {
-                html += `<div class="learn-more-section"><div class="learn-more-label">What it is:</div><div class="learn-more-text">${lm.what}</div></div>`;
-            }
-            if (lm.taxImpact || lm.whyValid || lm.whyInvalid) {
-                const label = lm.taxImpact ? 'Tax Impact:' : (lm.whyValid ? 'Why it counts:' : 'Why it doesn\'t count:');
-                const text = lm.taxImpact || lm.whyValid || lm.whyInvalid;
-                html += `<div class="learn-more-section"><div class="learn-more-label">${label}</div><div class="learn-more-text">${text}</div></div>`;
-            }
-            if (lm.irsRules || lm.consequences) {
-                const text = lm.irsRules || lm.consequences;
-                html += `<div class="learn-more-section"><div class="learn-more-label">${lm.consequences ? 'Consequences:' : 'IRS Rules:'}</div><div class="learn-more-text">${text}</div></div>`;
-            }
-            if (lm.proTip || lm.realWorld) {
-                const text = lm.proTip || lm.realWorld;
-                html += `<div class="learn-more-protip"><div class="learn-more-label">💰 Pro Tip</div><div class="learn-more-text">${text}</div></div>`;
-            }
-            if (lm.keyDifference || lm.documentation || lm.exception) {
-                const text = lm.keyDifference || lm.documentation || lm.exception;
-                html += `<div class="learn-more-section"><div class="learn-more-label">Good to know:</div><div class="learn-more-text">${text}</div></div>`;
-            }
-            
-            panel.innerHTML = html;
-            element.parentElement.insertBefore(panel, element.nextSibling);
-        }
-
-        function showLearnedScreen() {
-            const data = gameState.levelData;
-            const list = document.getElementById('learnedList');
-            list.innerHTML = '';
-            
-            if (data.learned) {
-                data.learned.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'learned-item';
-                    li.innerHTML = `
-                        <div class="learned-check">✓</div>
-                        <div class="learned-text">${item}</div>
-                    `;
-                    list.appendChild(li);
-                });
-            }
-            
-            // Unlock glossary terms based on level
-            const termsToUnlock = {
-                1: ['W-2', 'withholding'],
-                2: ['1099', 'deduction', 'selfemployment', 'mileage'],
-                3: ['audit', 'crypto']
-            };
-            
-            const newTerms = termsToUnlock[gameState.currentLevel] || [];
-            let unlockedCount = 0;
-            newTerms.forEach(term => {
-                if (!taxKnowledge.unlocked.includes(term)) {
-                    taxKnowledge.unlocked.push(term);
-                    unlockedCount++;
-                }
-            });
-            
-            document.getElementById('badgeText').textContent = `Tax Knowledge +${data.learned ? data.learned.length : 0}`;
-            
-            // Save glossary progress
-            localStorage.setItem('taxHeroGlossary', JSON.stringify(taxKnowledge.unlocked));
-            
-            showScreen('learnedScreen');
-        }
-
-        function showGlossary() {
-            const list = document.getElementById('glossaryList');
-            list.innerHTML = '';
-            
-            // Load unlocked terms
-            const saved = localStorage.getItem('taxHeroGlossary');
-            if (saved) {
-                taxKnowledge.unlocked = JSON.parse(saved);
-            }
-            
-            Object.entries(taxKnowledge.glossary).forEach(([key, term]) => {
-                const isUnlocked = taxKnowledge.unlocked.includes(key);
-                const card = document.createElement('div');
-                card.className = 'glossary-term ' + (isUnlocked ? 'unlocked' : 'locked');
-                
-                if (isUnlocked) {
-                    card.innerHTML = `
-                        <div class="glossary-term-header">
-                            <span class="glossary-term-title">${term.title}</span>
-                            <span class="glossary-term-icon">🔓</span>
-                        </div>
-                        <div class="glossary-term-desc">${term.definition}</div>
-                        <div style="margin-top: 8px; padding: 8px; background: rgba(0,212,255,0.1); border-radius: 6px; font-size: 12px;">
-                            <strong>Why it matters:</strong> ${term.whyItMatters}
-                        </div>
-                        <div style="margin-top: 8px; font-size: 11px; color: var(--gold);">
-                            💡 ${term.realWorld}
-                        </div>
-                    `;
-                    card.onclick = () => {
-                        // Could expand for more detail
-                    };
-                } else {
-                    card.innerHTML = `
-                        <div class="glossary-term-header">
-                            <span class="glossary-term-title">???</span>
-                            <span class="glossary-term-icon">🔒</span>
-                        </div>
-                        <div class="glossary-term-desc">Play more levels to unlock this term!</div>
-                    `;
-                }
-                
-                list.appendChild(card);
-            });
-            
-            showScreen('glossaryScreen');
-        }
-
-        // Visual Effects
-        function createParticles(element) {
-            const rect = element.getBoundingClientRect();
-            for (let i = 0; i < 8; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = (rect.left + rect.width/2) + 'px';
-                particle.style.top = (rect.top + rect.height/2) + 'px';
-                particle.style.transform = `translate(${(Math.random()-0.5)*60}px, ${(Math.random()-0.5)*60}px)`;
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 2000);
-            }
-        }
-
-        function createConfetti() {
-            const colors = ['#00D4FF', '#FF00FF', '#FFD700', '#4ade80', '#ff6b35'];
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 3000);
-                }, i * 30);
-            }
-        }
-
-        // Start
+        // START
         init();
     </script>
 </body>
