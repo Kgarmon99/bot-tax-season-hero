@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Learn to file taxes the fun way! Help clients maximize refunds and avoid audits in this MoneyBot educational game.">
+    <meta name="theme-color" content="#00D4FF">
+    <meta property="og:title" content="Tax Season Hero - MoneyBot">
+    <meta property="og:description" content="Master tax filing through gameplay. Can you beat the deadline?">
+    <meta property="og:image" content="assets/game-hero.png">
+    <link rel="icon" type="image/png" href="assets/moneybot-tax-coach.png">
+    <title>Tax Season Hero | MoneyBot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cyan: #00D4FF;
+            --magenta: #FF00FF;
+            --gold: #FFD700;
+            --dark: #0a0a1a;
+            --darker: #050510;
+            --panel: rgba(20, 20, 40, 0.95);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a0a2e 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+
+        .logo-icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--cyan), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-display {
+            text-align: right;
+        }
+
+        .score-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Screen */
+        .hero-section {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 32px;
+        }
+
+        .moneybot-mascot {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.4);
+            animation: float 3s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .moneybot-mascot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .levels-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .level-card {
+            background: var(--panel);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover, .level-card:active {
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .level-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .level-card.completed {
+            border-color: var(--gold);
+        }
+
+        .level-number {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: var(--cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .level-card.completed .level-number {
+            background: var(--gold);
+        }
+
+        .level-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .level-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .level-difficulty {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .difficulty-dot.active {
+            background: var(--gold);
+        }
+
+        /* Game Screen */
+        .timer-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, #ff6b35, #ff0000);
+        }
+
+        .client-section {
+            background: var(--panel);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .client-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .client-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+        }
+
+        .client-info h3 {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .client-info p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .client-story {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.8);
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border-left: 3px solid var(--cyan);
+        }
+
+        .documents-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .document-card {
+            background: var(--panel);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .document-card:hover {
+            border-color: var(--cyan);
+            transform: scale(1.02);
+        }
+
+        .document-card.selected {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .document-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .document-name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .deductions-section {
+            margin-bottom: 16px;
+        }
+
+        .deduction-item {
+            background: var(--panel);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .deduction-item:hover {
+            border-color: var(--cyan);
+        }
+
+        .deduction-item.selected {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .deduction-item.audit-risk {
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+
+        .deduction-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .deduction-item.selected .deduction-checkbox {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+        }
+
+        .deduction-info {
+            flex: 1;
+        }
+
+        .deduction-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .deduction-desc {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .deduction-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .audit-warning {
+            font-size: 11px;
+            color: #ff6b35;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .deduction-item.audit-risk .audit-warning {
+            display: block;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border: none;
+            border-radius: 16px;
+            padding: 18px 32px;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* MoneyBot Tip */
+        .moneybot-tip {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 0, 255, 0.2));
+            border: 2px solid var(--cyan);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .moneybot-tip-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .moneybot-tip-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .moneybot-tip-content h4 {
+            font-size: 14px;
+            color: var(--cyan);
+            margin-bottom: 4px;
+        }
+
+        .moneybot-tip-content p {
+            font-size: 13px;
+            line-height: 1.4;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Results Screen */
+        .results-header {
+            text-align: center;
+            padding: 32px 0;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .result-subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .results-stats {
+            background: var(--panel);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .stat-value.positive {
+            color: #4ade80;
+        }
+
+        .stat-value.negative {
+            color: #ff6b35;
+        }
+
+        .stat-value.gold {
+            color: var(--gold);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--panel);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-button.primary {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            color: white;
+        }
+
+        .modal-button.secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Progress particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float 2s ease-out forwards;
+        }
+
+        @keyframes particle-float {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
+                </div>
+                <div class="logo-text">TAX HERO</div>
+            </div>
+            <div class="score-display">
+                <div class="score-label">Total Score</div>
+                <div class="score-value" id="totalScore">0</div>
+            </div>
+        </header>
+
+        <!-- Home Screen -->
+        <div class="screen active" id="homeScreen">
+            <div class="hero-section">
+                <div class="moneybot-mascot">
+                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot Tax Coach">
+                </div>
+                <h1 class="hero-title">Tax Season Hero</h1>
+                <p class="hero-subtitle">Help clients file their taxes and become a filing legend!</p>
+            </div>
+
+            <div class="levels-grid">
+                <div class="level-card" data-level="1" onclick="startLevel(1)">
+                    <div class="level-number">1</div>
+                    <h3 class="level-title">Summer Job Hero</h3>
+                    <p class="level-desc">Simple W-2, first-time filer</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                </div>
+
+                <div class="level-card" data-level="2" id="level2Card">
+                    <div class="level-number">2</div>
+                    <h3 class="level-title">Side Hustle Solver</h3>
+                    <p class="level-desc">W-2 + 1099, deductions unlocked</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                </div>
+
+                <div class="level-card" data-level="3" id="level3Card">
+                    <div class="level-number">3</div>
+                    <h3 class="level-title">Gig Economy Chaos</h3>
+                    <p class="level-desc">Multi-income, crypto, audit risk</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="gameScreen">
+            <div class="timer-bar">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+
+            <div class="client-section">
+                <div class="client-header">
+                    <div class="client-avatar" id="clientAvatar">👤</div>
+                    <div class="client-info">
+                        <h3 id="clientName">Client Name</h3>
+                        <p id="clientJob">Job Title</p>
+                    </div>
+                </div>
+                <div class="client-story" id="clientStory">
+                    Client story goes here...
+                </div>
+            </div>
+
+            <div class="documents-section">
+                <div class="section-title">Tax Documents</div>
+                <div class="documents-grid" id="documentsGrid">
+                    <!-- Documents inserted by JS -->
+                </div>
+            </div>
+
+            <div class="deductions-section" id="deductionsSection" style="display:none;">
+                <div class="section-title">Deductions & Credits</div>
+                <div id="deductionsList">
+                    <!-- Deductions inserted by JS -->
+                </div>
+            </div>
+
+            <div class="moneybot-tip" id="moneybotTip" style="display:none;">
+                <div class="moneybot-tip-icon">
+                    <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
+                </div>
+                <div class="moneybot-tip-content">
+                    <h4>MoneyBot Tax Tip!</h4>
+                    <p id="tipText">Tip goes here...</p>
+                </div>
+            </div>
+
+            <button class="action-button" id="fileButton" onclick="fileReturn()">
+                FILE RETURN
+            </button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="resultsScreen">
+            <div class="results-header">
+                <div class="result-icon" id="resultIcon">🎉</div>
+                <h2 class="result-title" id="resultTitle">Return Filed!</h2>
+                <p class="result-subtitle" id="resultSubtitle">Great job helping your client!</p>
+            </div>
+
+            <div class="results-stats">
+                <div class="stat-row">
+                    <span class="stat-label">Filing Status</span>
+                    <span class="stat-value" id="statStatus">Single</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Documents Filed</span>
+                    <span class="stat-value positive" id="statDocs">1/1</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Deductions Claimed</span>
+                    <span class="stat-value positive" id="statDeductions">$0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Refund Amount</span>
+                    <span class="stat-value gold" id="statRefund">$0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Time Bonus</span>
+                    <span class="stat-value positive" id="statTime">+100</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Audit Risk</span>
+                    <span class="stat-value" id="statRisk">Low</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Level Score</span>
+                    <span class="stat-value gold" id="statScore">0</span>
+                </div>
+            </div>
+
+            <button class="action-button" onclick="backToMenu()">
+                CONTINUE
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 class="modal-title" id="modalTitle">Wait!</h3>
+            <p class="modal-text" id="modalText">Are you sure?</p>
+            <div class="modal-buttons">
+                <button class="modal-button secondary" onclick="closeModal()">Cancel</button>
+                <button class="modal-button primary" id="modalConfirm" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            totalScore: 0,
+            currentLevel: 0,
+            unlockedLevels: [1],
+            completedLevels: [],
+            timer: null,
+            timeLeft: 0,
+            maxTime: 0,
+            selectedDocs: new Set(),
+            selectedDeductions: new Set(),
+            levelData: null
+        };
+
+        // Level Data
+        const levels = {
+            1: {
+                client: {
+                    name: "Alex Rivera",
+                    job: "Lifeguard",
+                    avatar: "🏊",
+                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld for federal taxes. First time filing! No other income or complications."
+                },
+                documents: [
+                    { id: "w2", name: "W-2 Form", icon: "📄", desc: "Wages from pool job" },
+                    { id: "1099", name: "1099-NEC", icon: "📋", desc: "Contractor income", fake: true }
+                ],
+                deductions: [],
+                correctDocs: ["w2"],
+                tips: [
+                    "First time filing? You probably don't owe anything if you made under $13,850!",
+                    "W-2 means you're an employee. Your employer already withheld taxes for you."
+                ],
+                baseRefund: 350,
+                timeLimit: 60
+            },
+            2: {
+                client: {
+                    name: "Jordan Chen",
+                    job: "Barista + Photographer",
+                    avatar: "☕",
+                    story: "Jordan worked part-time at a coffee shop (W-2: $8,500) AND did freelance photography on weekends (1099: $3,200). Bought a $1,200 camera for the photo business and drove 400 miles for shoots."
+                },
+                documents: [
+                    { id: "w2", name: "W-2 Coffee Shop", icon: "☕", desc: "$8,500 wages" },
+                    { id: "1099", name: "1099-NEC Photo", icon: "📷", desc: "$3,200 freelance" },
+                    { id: "fake1", name: "1099-DIV", icon: "📊", desc: "Investment income", fake: true }
+                ],
+                deductions: [
+                    { id: "camera", name: "Camera Equipment", desc: "Business equipment over $600", amount: 1200, legit: true },
+                    { id: "miles", name: "Mileage Deduction", desc: "400 miles @ $0.67/mile", amount: 268, legit: true },
+                    { id: "coffee", name: "Daily Coffee", desc: "Personal expense", amount: 450, legit: false, auditRisk: "Personal expenses aren't deductible!" },
+                    { id: "clothes", name: "Work Clothes", desc: "Regular clothing", amount: 200, legit: false, auditRisk: "Unless required uniform, not deductible!" }
+                ],
+                correctDocs: ["w2", "1099"],
+                correctDeductions: ["camera", "miles"],
+                tips: [
+                    "1099 income means you're self-employed - you can deduct business expenses!",
+                    "Keep receipts for anything over $75. The IRS loves documentation.",
+                    "Home office deduction? Only if it's used EXCLUSIVELY for business."
+                ],
+                baseRefund: 0,
+                timeLimit: 90
+            },
+            3: {
+                client: {
+                    name: "Sam Torres",
+                    job: "Gig Worker + Trader",
+                    avatar: "🚗",
+                    story: "Sam drives Uber ($18,000), delivers DoorDash ($8,500), trades crypto (lost $2,000), and tutors online ($4,200). Has vehicle expenses, phone bills, and wants to claim home office. Complex situation!"
+                },
+                documents: [
+                    { id: "uber", name: "1099-K Uber", icon: "🚗", desc: "$18,000 rideshare" },
+                    { id: "doordash", name: "1099-NEC DD", icon: "🍔", desc: "$8,500 delivery" },
+                    { id: "tutor", name: "1099-NEC Tutor", icon: "📚", desc: "$4,200 tutoring" },
+                    { id: "crypto", name: "1099-B Crypto", icon: "₿", desc: "Trading activity" }
+                ],
+                deductions: [
+                    { id: "vehicle", name: "Vehicle Expenses", desc: "Standard mileage or actual costs", amount: 4200, legit: true },
+                    { id: "phone", name: "Phone & Internet", desc: "Business percentage (60%)", amount: 720, legit: true },
+                    { id: "homeoffice", name: "Home Office", desc: "20% of home expenses", amount: 2400, legit: true },
+                    { id: "crypto", name: "Crypto Losses", desc: "Up to $3,000 deductible", amount: 2000, legit: true },
+                    { id: "meals", name: "All Meals", desc: "Only 50% of business meals", amount: 1800, legit: false, auditRisk: "Only business meals are deductible, and only 50%!" },
+                    { id: "personal", name: "Personal Deduction", desc: "Questionable write-off", amount: 5000, legit: false, auditRisk: "This would definitely trigger an audit!" }
+                ],
+                correctDocs: ["uber", "doordash", "tutor", "crypto"],
+                correctDeductions: ["vehicle", "phone", "homeoffice", "crypto"],
+                tips: [
+                    "Multiple 1099s? You're self-employed - pay quarterly taxes to avoid penalties!",
+                    "Crypto losses can offset gains AND up to $3,000 of regular income.",
+                    "Track mileage EVERY day. Estimates don't fly with the IRS.",
+                    "Home office must be regular AND exclusive use to qualify."
+                ],
+                baseRefund: 0,
+                timeLimit: 120
+            }
+        };
+
+        // Initialize
+        function init() {
+            loadProgress();
+            updateLevelCards();
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('taxHeroProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                gameState.totalScore = data.totalScore || 0;
+                gameState.unlockedLevels = data.unlockedLevels || [1];
+                gameState.completedLevels = data.completedLevels || [];
+            }
+            document.getElementById('totalScore').textContent = gameState.totalScore;
+        }
+
+        function saveProgress() {
+            localStorage.setItem('taxHeroProgress', JSON.stringify({
+                totalScore: gameState.totalScore,
+                unlockedLevels: gameState.unlockedLevels,
+                completedLevels: gameState.completedLevels
+            }));
+        }
+
+        function updateLevelCards() {
+            document.querySelectorAll('.level-card').forEach(card => {
+                const level = parseInt(card.dataset.level);
+                card.classList.remove('locked', 'completed');
+                
+                if (gameState.completedLevels.includes(level)) {
+                    card.classList.add('completed');
+                } else if (!gameState.unlockedLevels.includes(level)) {
+                    card.classList.add('locked');
+                    card.onclick = null;
+                }
+            });
+        }
+
+        // Level Management
+        function startLevel(levelNum) {
+            if (!gameState.unlockedLevels.includes(levelNum)) return;
+            
+            gameState.currentLevel = levelNum;
+            gameState.levelData = levels[levelNum];
+            gameState.selectedDocs.clear();
+            gameState.selectedDeductions.clear();
+            
+            // Setup game screen
+            setupGameScreen();
+            
+            // Switch screens
+            showScreen('gameScreen');
+            
+            // Start timer
+            startTimer(gameState.levelData.timeLimit);
+            
+            // Show first tip
+            showRandomTip();
+        }
+
+        function setupGameScreen() {
+            const data = gameState.levelData;
+            
+            // Client info
+            document.getElementById('clientAvatar').textContent = data.client.avatar;
+            document.getElementById('clientName').textContent = data.client.name;
+            document.getElementById('clientJob').textContent = data.client.job;
+            document.getElementById('clientStory').textContent = data.client.story;
+            
+            // Documents
+            const docsGrid = document.getElementById('documentsGrid');
+            docsGrid.innerHTML = '';
+            data.documents.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = 'document-card';
+                card.dataset.docId = doc.id;
+                card.innerHTML = `
+                    <div class="document-icon">${doc.icon}</div>
+                    <div class="document-name">${doc.name}</div>
+                `;
+                card.onclick = () => toggleDocument(doc.id, card);
+                docsGrid.appendChild(card);
+            });
+            
+            // Deductions
+            const deducSection = document.getElementById('deductionsSection');
+            const deducList = document.getElementById('deductionsList');
+            
+            if (data.deductions && data.deductions.length > 0) {
+                deducSection.style.display = 'block';
+                deducList.innerHTML = '';
+                data.deductions.forEach(ded => {
+                    const item = document.createElement('div');
+                    item.className = 'deduction-item' + (ded.auditRisk ? ' audit-risk' : '');
+                    item.dataset.dedId = ded.id;
+                    item.innerHTML = `
+                        <div class="deduction-checkbox">✓</div>
+                        <div class="deduction-info">
+                            <div class="deduction-name">${ded.name}</div>
+                            <div class="deduction-desc">${ded.desc}</div>
+                            <div class="audit-warning">⚠️ ${ded.auditRisk}</div>
+                        </div>
+                        <div class="deduction-amount">$${ded.amount.toLocaleString()}</div>
+                    `;
+                    item.onclick = () => toggleDeduction(ded.id, item);
+                    deducList.appendChild(item);
+                });
+            } else {
+                deducSection.style.display = 'none';
+            }
+            
+            // Reset UI
+            document.getElementById('timerFill').style.width = '100%';
+            document.getElementById('timerFill').classList.remove('warning');
+            document.getElementById('moneybotTip').style.display = 'none';
+        }
+
+        function toggleDocument(docId, card) {
+            if (gameState.selectedDocs.has(docId)) {
+                gameState.selectedDocs.delete(docId);
+                card.classList.remove('selected');
+            } else {
+                gameState.selectedDocs.add(docId);
+                card.classList.add('selected');
+                createParticles(card);
+            }
+        }
+
+        function toggleDeduction(dedId, item) {
+            if (gameState.selectedDeductions.has(dedId)) {
+                gameState.selectedDeductions.delete(dedId);
+                item.classList.remove('selected');
+            } else {
+                gameState.selectedDeductions.add(dedId);
+                item.classList.add('selected');
+                createParticles(item);
+                
+                // Show tip if audit risk
+                const deduction = gameState.levelData.deductions.find(d => d.id === dedId);
+                if (deduction && !deduction.legit) {
+                    showTip(deduction.auditRisk);
+                }
+            }
+        }
+
+        function showRandomTip() {
+            const tips = gameState.levelData.tips;
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            showTip(tip);
+        }
+
+        function showTip(text) {
+            const tipEl = document.getElementById('moneybotTip');
+            document.getElementById('tipText').textContent = text;
+            tipEl.style.display = 'flex';
+        }
+
+        // Timer
+        function startTimer(seconds) {
+            gameState.maxTime = seconds;
+            gameState.timeLeft = seconds;
+            
+            if (gameState.timer) clearInterval(gameState.timer);
+            
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                const pct = (gameState.timeLeft / gameState.maxTime) * 100;
+                const timerFill = document.getElementById('timerFill');
+                timerFill.style.width = pct + '%';
+                
+                if (pct < 30) {
+                    timerFill.classList.add('warning');
+                }
+                
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timer);
+                    showModal('⏰', 'Time\'s Up!', 'The deadline passed! Your client got a penalty for late filing.', () => {
+                        fileReturn(true);
+                    });
+                }
+            }, 1000);
+        }
+
+        // Filing
+        function fileReturn(timeExpired = false) {
+            clearInterval(gameState.timer);
+            
+            const data = gameState.levelData;
+            let score = 0;
+            let correctDocs = 0;
+            let totalDeductions = 0;
+            let auditRisk = 0;
+            let mistakes = [];
+            
+            // Check documents
+            data.correctDocs.forEach(docId => {
+                if (gameState.selectedDocs.has(docId)) {
+                    correctDocs++;
+                    score += 100;
+                } else {
+                    mistakes.push(`Missed required document: ${docId.toUpperCase()}`);
+                }
+            });
+            
+            // Check for fake docs selected
+            gameState.selectedDocs.forEach(docId => {
+                if (!data.correctDocs.includes(docId)) {
+                    score -= 50;
+                    mistakes.push(`Filed fake document: ${docId.toUpperCase()}`);
+                    auditRisk += 1;
+                }
+            });
+            
+            // Check deductions
+            if (data.deductions) {
+                data.deductions.forEach(ded => {
+                    if (gameState.selectedDeductions.has(ded.id)) {
+                        if (ded.legit) {
+                            score += 50;
+                            totalDeductions += ded.amount;
+                        } else {
+                            score -= 100;
+                            auditRisk += 2;
+                            mistakes.push(`Claimed invalid deduction: ${ded.name}`);
+                        }
+                    } else if (ded.legit && data.correctDeductions.includes(ded.id)) {
+                        mistakes.push(`Missed legitimate deduction: ${ded.name}`);
+                    }
+                });
+            }
+            
+            // Time bonus
+            const timeBonus = timeExpired ? 0 : Math.floor(gameState.timeLeft * 2);
+            score += timeBonus;
+            
+            // Base refund calculation
+            let refund = data.baseRefund || Math.floor(totalDeductions * 0.15);
+            
+            // Audit check
+            const auditTriggered = auditRisk >= 2 || (auditRisk > 0 && Math.random() < 0.3);
+            
+            // Results
+            let resultType = 'success';
+            if (auditTriggered) {
+                resultType = 'audit';
+                refund = Math.floor(refund * 0.5); // Audit penalties
+            } else if (correctDocs < data.correctDocs.length) {
+                resultType = 'incomplete';
+            }
+            
+            // Save progress
+            if (resultType !== 'audit') {
+                if (!gameState.completedLevels.includes(gameState.currentLevel)) {
+                    gameState.completedLevels.push(gameState.currentLevel);
+                }
+                const nextLevel = gameState.currentLevel + 1;
+                if (nextLevel <= 3 && !gameState.unlockedLevels.includes(nextLevel)) {
+                    gameState.unlockedLevels.push(nextLevel);
+                }
+            }
+            
+            gameState.totalScore += Math.max(0, score);
+            saveProgress();
+            
+            // Show results
+            showResults(resultType, score, refund, timeBonus, totalDeductions, auditTriggered);
+        }
+
+        function showResults(type, score, refund, timeBonus, deductions, auditTriggered) {
+            const icons = {
+                success: '🎉',
+                audit: '🔍',
+                incomplete: '⚠️'
+            };
+            const titles = {
+                success: 'Return Filed Successfully!',
+                audit: 'AUDIT TRIGGERED!',
+                incomplete: 'Return Incomplete'
+            };
+            const subtitles = {
+                success: 'Your client is getting a nice refund!',
+                audit: 'The IRS wants to take a closer look...',
+                incomplete: 'Some required documents were missing.'
+            };
+            
+            document.getElementById('resultIcon').textContent = icons[type];
+            document.getElementById('resultTitle').textContent = titles[type];
+            document.getElementById('resultSubtitle').textContent = subtitles[type];
+            
+            document.getElementById('statStatus').textContent = 'Single';
+            document.getElementById('statDocs').textContent = 
+                `${gameState.selectedDocs.size}/${gameState.levelData.correctDocs.length}`;
+            document.getElementById('statDeductions').textContent = `$${deductions.toLocaleString()}`;
+            document.getElementById('statRefund').textContent = `$${refund.toLocaleString()}`;
+            document.getElementById('statTime').textContent = `+${timeBonus}`;
+            document.getElementById('statRisk').textContent = auditTriggered ? 'HIGH ⚠️' : 'Low ✓';
+            document.getElementById('statRisk').className = 'stat-value ' + (auditTriggered ? 'negative' : 'positive');
+            document.getElementById('statScore').textContent = score;
+            
+            if (type === 'success') {
+                createConfetti();
+            }
+            
+            document.getElementById('totalScore').textContent = gameState.totalScore;
+            showScreen('resultsScreen');
+        }
+
+        // Navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function backToMenu() {
+            updateLevelCards();
+            showScreen('homeScreen');
+        }
+
+        // Modal
+        function showModal(icon, title, text, onConfirm) {
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalText').textContent = text;
+            document.getElementById('modalConfirm').onclick = () => {
+                closeModal();
+                if (onConfirm) onConfirm();
+            };
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Visual Effects
+        function createParticles(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = (rect.left + rect.width/2) + 'px';
+                particle.style.top = (rect.top + rect.height/2) + 'px';
+                particle.style.transform = `translate(${(Math.random()-0.5)*60}px, ${(Math.random()-0.5)*60}px)`;
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#00D4FF', '#FF00FF', '#FFD700', '#4ade80', '#ff6b35'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
