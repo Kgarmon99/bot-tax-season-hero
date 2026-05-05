@@ -144,7 +144,16 @@
         .hero-subtitle {
             font-size: 16px;
             color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+
+        .moneybot-tagline {
+            font-size: 12px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 32px;
+            font-weight: 600;
         }
 
         .moneybot-mascot {
@@ -314,6 +323,26 @@
             background: rgba(0,0,0,0.2);
             border-radius: 8px;
             border-left: 3px solid var(--cyan);
+        }
+
+        .moneybot-mission {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 255, 0.1));
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            font-size: 12px;
+        }
+
+        .mission-label {
+            color: var(--cyan);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mission-text {
+            color: rgba(255,255,255,0.8);
         }
 
         .documents-section {
@@ -521,6 +550,44 @@
             padding: 32px 0;
         }
 
+        .moneybot-branding-footer {
+            text-align: center;
+            padding: 24px 0;
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .moneybot-branding-footer img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+        }
+
+        .moneybot-branding-text {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .moneybot-watermark {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .moneybot-watermark img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
         .result-icon {
             font-size: 80px;
             margin-bottom: 16px;
@@ -688,9 +755,100 @@
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-50px) scale(0); }
         }
+
+        /* MoneyBot Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a0a2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: splashFade 0.5s ease 2.5s forwards;
+        }
+
+        @keyframes splashFade {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
+            animation: splashPulse 1.5s ease-in-out infinite;
+        }
+
+        .splash-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes splashPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .splash-text {
+            margin-top: 24px;
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .splash-tagline {
+            margin-top: 8px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .splash-loading {
+            margin-top: 32px;
+            width: 120px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .splash-loading-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            animation: splashLoad 2s ease forwards;
+        }
+
+        @keyframes splashLoad {
+            to { width: 100%; }
+        }
     </style>
 </head>
 <body>
+    <!-- MoneyBot Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">
+            <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
+        </div>
+        <div class="splash-text">MONEYBOT</div>
+        <div class="splash-tagline">Learn Through Play</div>
+        <div class="splash-loading">
+            <div class="splash-loading-bar"></div>
+        </div>
+    </div>
+
     <div class="game-container">
         <!-- Header -->
         <header class="header">
@@ -712,15 +870,16 @@
                 <div class="moneybot-mascot">
                     <img src="assets/moneybot-tax-coach.png" alt="MoneyBot Tax Coach">
                 </div>
+                <p class="moneybot-tagline">🤖 MoneyBot Presents</p>
                 <h1 class="hero-title">Tax Season Hero</h1>
-                <p class="hero-subtitle">Help clients file their taxes and become a filing legend!</p>
+                <p class="hero-subtitle">Master tax filing the fun way!</p>
             </div>
 
             <div class="levels-grid">
                 <div class="level-card" data-level="1" onclick="startLevel(1)">
                     <div class="level-number">1</div>
                     <h3 class="level-title">Summer Job Hero</h3>
-                    <p class="level-desc">Simple W-2, first-time filer</p>
+                    <p class="level-desc">Simple W-2 • MoneyBot Basics</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot"></div>
@@ -731,7 +890,7 @@
                 <div class="level-card" data-level="2" id="level2Card">
                     <div class="level-number">2</div>
                     <h3 class="level-title">Side Hustle Solver</h3>
-                    <p class="level-desc">W-2 + 1099, deductions unlocked</p>
+                    <p class="level-desc">W-2 + 1099 • Deductions Unlocked</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot active"></div>
@@ -742,7 +901,7 @@
                 <div class="level-card" data-level="3" id="level3Card">
                     <div class="level-number">3</div>
                     <h3 class="level-title">Gig Economy Chaos</h3>
-                    <p class="level-desc">Multi-income, crypto, audit risk</p>
+                    <p class="level-desc">Multi-Income • Audit Risk Master</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot active"></div>
@@ -768,6 +927,10 @@
                 </div>
                 <div class="client-story" id="clientStory">
                     Client story goes here...
+                </div>
+                <div class="moneybot-mission" id="moneybotMission">
+                    <span class="mission-label">💡 MoneyBot Mission:</span>
+                    <span class="mission-text">Help this client file correctly and maximize their refund!</span>
                 </div>
             </div>
 
@@ -805,7 +968,7 @@
             <div class="results-header">
                 <div class="result-icon" id="resultIcon">🎉</div>
                 <h2 class="result-title" id="resultTitle">Return Filed!</h2>
-                <p class="result-subtitle" id="resultSubtitle">Great job helping your client!</p>
+                <p class="result-subtitle" id="resultSubtitle">MoneyBot approves of your tax skills!</p>
             </div>
 
             <div class="results-stats">
@@ -842,7 +1005,17 @@
             <button class="action-button" onclick="backToMenu()">
                 CONTINUE
             </button>
+
+            <div class="moneybot-branding-footer">
+                <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
+                <div class="moneybot-branding-text">Powered by MoneyBot</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px;">Learn real money skills through play</div>
+            </div>
         </div>
+    </div>
+
+    <div class="moneybot-watermark">
+        <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
     </div>
 
     <!-- Modal -->
