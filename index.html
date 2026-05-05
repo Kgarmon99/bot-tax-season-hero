@@ -2363,7 +2363,7 @@
                 if (saved) {
                     const data = JSON.parse(saved);
                     gameState.totalScore = data.totalScore || 0;
-                    gameState.unlockedLevels = data.unlockedLevels || [1];
+                    gameState.unlockedLevels = data.unlockedLevels || [1, 2, 3];
                     gameState.completedLevels = data.completedLevels || [];
                 }
             } catch (e) {
@@ -2401,7 +2401,7 @@
                     card.classList.add('completed');
                 } else if (!gameState.unlockedLevels.includes(level)) {
                     card.classList.add('locked');
-                    card.onclick = null;
+                    // Don't remove onclick - let the startLevel function handle locking
                 }
             });
         }
