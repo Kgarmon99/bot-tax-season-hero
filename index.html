@@ -2,279 +2,630 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tax Season Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        :root {
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --surface-light: #252542;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --paper: #fafaf9;
+        }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a2e;
-            color: #f5f3ef;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            line-height: 1.5;
         }
         
-        .container {
-            max-width: 480px;
+        .app {
+            max-width: 500px;
             margin: 0 auto;
-            padding: 16px;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         
-        .screen { display: none; }
-        .screen.active { display: block; }
+        .screen { 
+            display: none; 
+            animation: fadeIn 0.3s ease;
+        }
+        .screen.active { display: flex; flex-direction: column; flex: 1; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         /* Header */
-        .header {
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
-            background: #f5f3ef;
-            color: #1a1a2e;
-            border-radius: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
         
-        .header h1 { font-size: 20px; }
-        .score { font-size: 14px; color: #059669; font-weight: bold; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         
-        /* Level Cards */
-        .level-card {
-            background: #f5f3ef;
-            color: #1a1a2e;
-            padding: 16px;
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
             border-radius: 12px;
-            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .score-pill {
+            background: var(--surface);
+            padding: 10px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .score-pill span { color: var(--success); }
+        
+        /* Level Grid */
+        .level-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .level-card {
+            background: var(--surface);
+            border: 1px solid var(--surface-light);
+            border-radius: 16px;
+            padding: 20px;
             cursor: pointer;
-            border: 2px solid #2d2d44;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .level-card:hover, .level-card:active {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
         }
         
         .level-card.locked {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }
         
-        .level-card h3 { font-size: 18px; margin-bottom: 4px; }
-        .level-card p { font-size: 13px; color: #2d2d44; }
-        .level-num { 
-            float: right; 
-            background: #1a1a2e; 
-            color: #f5f3ef;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+        .level-card.locked:hover {
+            transform: none;
+            border-color: var(--surface-light);
+            box-shadow: none;
         }
         
+        .level-card.completed {
+            border-color: var(--success);
+            background: linear-gradient(135deg, var(--surface), rgba(34, 197, 94, 0.1));
+        }
+        
+        .level-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--surface-light);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .level-card.completed .level-badge {
+            background: var(--success);
+            color: var(--bg);
+        }
+        
+        .level-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            padding-right: 60px;
+        }
+        
+        .level-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        
+        .difficulty {
+            display: flex;
+            gap: 4px;
+            margin-top: 12px;
+        }
+        
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface-light);
+        }
+        
+        .dot.active { background: var(--warning); }
+        .dot.completed { background: var(--success); }
+        
         /* Game Screen */
+        .timer-wrap {
+            margin-bottom: 20px;
+        }
+        
         .timer-bar {
-            height: 8px;
-            background: #2d2d44;
-            border-radius: 4px;
-            margin-bottom: 16px;
+            height: 6px;
+            background: var(--surface-light);
+            border-radius: 3px;
             overflow: hidden;
         }
         
         .timer-fill {
             height: 100%;
-            background: #2563eb;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             width: 100%;
             transition: width 1s linear;
         }
         
-        .client-box {
-            background: #f5f3ef;
-            color: #1a1a2e;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+        .timer-fill.warning {
+            background: var(--danger);
+            animation: pulse 1s infinite;
         }
         
-        .client-box h2 { font-size: 20px; margin-bottom: 8px; }
-        .client-box p { font-size: 14px; line-height: 1.5; color: #2d2d44; }
-        
-        /* Documents */
-        .section-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            color: rgba(245, 243, 239, 0.7);
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
         
-        .doc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
+        .client-card {
+            background: var(--surface);
+            border: 1px solid var(--surface-light);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
         
-        .doc-card {
-            background: #f5f3ef;
-            color: #1a1a2e;
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        
-        .doc-card.selected {
-            border-color: #059669;
-            background: #e8f5e9;
-        }
-        
-        .doc-card .icon { font-size: 32px; margin-bottom: 8px; }
-        .doc-card .name { font-size: 13px; font-weight: 600; }
-        
-        /* Deductions */
-        .deduction-list { margin-bottom: 16px; }
-        
-        .deduction-item {
-            background: #f5f3ef;
-            color: #1a1a2e;
-            padding: 14px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+        .client-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            cursor: pointer;
+            gap: 16px;
+            margin-bottom: 16px;
         }
         
-        .deduction-item.selected {
-            border: 2px solid #059669;
-            background: #e8f5e9;
-        }
-        
-        .deduction-item.audit {
-            border: 2px solid #c41e3a;
-        }
-        
-        .check { 
-            width: 24px; 
-            height: 24px; 
-            border: 2px solid #2d2d44;
-            border-radius: 4px;
+        .client-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--surface-light);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 28px;
         }
         
-        .deduction-item.selected .check {
-            background: #059669;
-            border-color: #059669;
+        .client-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .client-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .client-story {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+        
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        
+        .section-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+        
+        /* Documents */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .doc-card {
+            background: var(--surface);
+            border: 2px solid var(--surface-light);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .doc-card:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .doc-card.selected {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .doc-card .icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        
+        .doc-card .name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        /* Deductions */
+        .deduction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .deduction-card {
+            background: var(--surface);
+            border: 2px solid var(--surface-light);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .deduction-card:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .deduction-card.selected {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .deduction-card.audit {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        .check-circle {
+            width: 26px;
+            height: 26px;
+            border: 2px solid var(--surface-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            color: transparent;
+            transition: all 0.15s ease;
+        }
+        
+        .deduction-card.selected .check-circle {
+            background: var(--success);
+            border-color: var(--success);
             color: white;
         }
         
+        .deduction-card.audit .check-circle {
+            border-color: var(--danger);
+        }
+        
         .deduction-info { flex: 1; }
-        .deduction-info h4 { font-size: 14px; margin-bottom: 2px; }
-        .deduction-info p { font-size: 12px; color: #2d2d44; }
-        .deduction-amt { font-weight: bold; color: #059669; }
-        .audit-warning { font-size: 11px; color: #c41e3a; margin-top: 4px; display: none; }
-        .deduction-item.audit .audit-warning { display: block; }
+        
+        .deduction-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .deduction-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .deduction-amt {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--success);
+        }
+        
+        .deduction-card.audit .deduction-amt {
+            color: var(--danger);
+        }
+        
+        .audit-tag {
+            font-size: 11px;
+            color: var(--danger);
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .deduction-card.audit .audit-tag { display: block; }
         
         /* Buttons */
         .btn {
             width: 100%;
-            padding: 16px;
-            background: #2563eb;
+            padding: 18px 24px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 14px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 16px;
+            transition: all 0.2s ease;
+            margin-top: auto;
         }
         
-        .btn:hover { background: #1d4ed8; }
+        .btn:hover { 
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+        
+        .btn:active { transform: translateY(0); }
         
         .btn-secondary {
-            background: #2d2d44;
-            margin-top: 8px;
+            background: var(--surface);
+            border: 1px solid var(--surface-light);
+            margin-top: 12px;
         }
         
-        .btn-secondary:hover { background: #1a1a2e; }
+        .btn-secondary:hover {
+            background: var(--surface-light);
+        }
         
         /* Results */
-        .result-box {
-            background: #f5f3ef;
-            color: #1a1a2e;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--surface-light);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--surface-light);
+            margin-bottom: 20px;
+        }
+        
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 12px;
+        }
+        
+        .result-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .result-header p {
+            font-size: 14px;
+            color: var(--text-muted);
         }
         
         .result-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e8e4dc;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--surface-light);
         }
         
         .result-row:last-child { border-bottom: none; }
-        .result-label { font-size: 14px; color: #2d2d44; }
-        .result-value { font-weight: 600; }
-        .result-value.good { color: #059669; }
-        .result-value.bad { color: #c41e3a; }
+        
+        .result-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .result-value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .result-value.success { color: var(--success); }
+        .result-value.danger { color: var(--danger); }
+        .result-value.warning { color: var(--warning); }
+        
+        /* Progress indicator */
+        .progress-bar {
+            height: 4px;
+            background: var(--surface-light);
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            width: 33%;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER -->
-        <div class="header">
-            <h1>📊 Tax Hero</h1>
-            <div class="score">Score: <span id="totalScore">0</span></div>
-        </div>
-
+    <div class="app">
         <!-- HOME SCREEN -->
         <div class="screen active" id="homeScreen">
-            <div id="levelsList"></div>
+            <div class="top-bar">
+                <div class="brand">
+                    <div class="brand-icon">📊</div>
+                    <div class="brand-text">
+                        <h1>Tax Hero</h1>
+                        <p>Master tax filing</p>
+                    </div>
+                </div>
+                <div class="score-pill">Score: <span id="totalScore">0</span></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="level-grid" id="levelsList"></div>
         </div>
 
         <!-- GAME SCREEN -->
         <div class="screen" id="gameScreen">
-            <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
-            
-            <div class="client-box">
-                <h2 id="clientName">Client</h2>
-                <p id="clientStory">Story here...</p>
+            <div class="top-bar">
+                <div class="brand">
+                    <div class="brand-icon" style="font-size: 18px;">⏱️</div>
+                    <div class="brand-text">
+                        <h1 id="levelNum">Level 1</h1>
+                        <p>Beat the deadline</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="section-title">Tax Documents</div>
+            <div class="timer-wrap">
+                <div class="timer-bar">
+                    <div class="timer-fill" id="timerFill"></div>
+                </div>
+            </div>
+            
+            <div class="client-card">
+                <div class="client-header">
+                    <div class="client-avatar" id="clientAvatar">👤</div>
+                    <div>
+                        <h2 id="clientName">Client</h2>
+                        <p id="clientJob">Job Title</p>
+                    </div>
+                </div>
+                <p class="client-story" id="clientStory">Story...</p>
+            </div>
+            
+            <div class="section-header">
+                <span class="section-title">Tax Documents</span>
+                <span class="section-count" id="docCount">Select required</span>
+            </div>
             <div class="doc-grid" id="docsList"></div>
             
-            <div class="section-title" id="deductTitle" style="display:none;">Deductions</div>
+            <div class="section-header" id="deductHeader" style="display:none;">
+                <span class="section-title">Deductions</span>
+                <span class="section-count">Choose wisely</span>
+            </div>
             <div class="deduction-list" id="deductList"></div>
             
-            <button class="btn" id="fileBtn">FILE RETURN</button>
+            <button class="btn" id="fileBtn">File Return</button>
         </div>
 
         <!-- RESULTS SCREEN -->
         <div class="screen" id="resultScreen">
-            <div class="result-box">
+            <div class="top-bar">
+                <div class="brand">
+                    <div class="brand-icon">✓</div>
+                    <div class="brand-text">
+                        <h1>Results</h1>
+                        <p>Level complete</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-icon" id="resultIcon">🎉</div>
+                    <h2 id="resultTitle">Return Filed!</h2>
+                    <p id="resultSub">Great work helping your client</p>
+                </div>
+                
                 <div class="result-row">
                     <span class="result-label">Status</span>
                     <span class="result-value" id="resStatus">-</span>
                 </div>
                 <div class="result-row">
-                    <span class="result-label">Documents</span>
-                    <span class="result-value good" id="resDocs">-</span>
+                    <span class="result-label">Documents Filed</span>
+                    <span class="result-value" id="resDocs">-</span>
                 </div>
                 <div class="result-row">
-                    <span class="result-label">Deductions</span>
+                    <span class="result-label">Deductions Claimed</span>
                     <span class="result-value" id="resDeduct">-</span>
                 </div>
                 <div class="result-row">
-                    <span class="result-label">Refund</span>
-                    <span class="result-value good" id="resRefund">-</span>
+                    <span class="result-label">Refund Amount</span>
+                    <span class="result-value success" id="resRefund">-</span>
                 </div>
                 <div class="result-row">
-                    <span class="result-label">Score</span>
-                    <span class="result-value good" id="resScore">-</span>
+                    <span class="result-label">Time Bonus</span>
+                    <span class="result-value success" id="resTime">-</span>
+                </div>
+                <div class="result-row" style="border-top: 2px solid var(--surface-light); margin-top: 10px; padding-top: 20px;">
+                    <span class="result-label">Total Score</span>
+                    <span class="result-value success" id="resScore" style="font-size: 20px;">-</span>
                 </div>
             </div>
-            <button class="btn" id="continueBtn">CONTINUE</button>
+            
+            <button class="btn" id="continueBtn">Continue</button>
+            <button class="btn btn-secondary" id="learnBtn" style="display:none;">What You Learned</button>
         </div>
     </div>
 
@@ -283,139 +634,166 @@
         const LEVELS = {
             1: {
                 name: "Maya Johnson",
-                story: "Maya just got her first paycheck! She made $3,200 and had $280 withheld. Help her file with her W-2.",
+                job: "First Job",
+                avatar: "🍦",
+                story: "Maya just got her first paycheck from the ice cream shop! She made $3,200 and had $280 withheld for taxes. Help her file her first tax return using her W-2 form.",
                 docs: [
                     { id: 'w2', name: 'W-2 Form', icon: '🧾', correct: true },
                     { id: 'fake', name: '1099-NEC', icon: '📋', correct: false }
                 ],
                 deductions: [],
+                learned: ["W-2 forms show your wages and taxes withheld", "First jobs often result in tax refunds"],
                 refund: 280,
                 time: 60
             },
             2: {
                 name: "Alex Rivera",
-                story: "Alex lifeguarded at the pool ($4,200). Got a W-2 but also something called a 1099 in the mail...",
+                job: "Lifeguard",
+                avatar: "🏊",
+                story: "Alex worked at the community pool and made $4,200. He got a W-2 but also received something called a 1099 in the mail for one private lesson. Which forms should he file?",
                 docs: [
                     { id: 'w2', name: 'W-2 Pool', icon: '🏊', correct: true },
-                    { id: 'fake', name: '1099-NEC', icon: '📋', correct: false }
+                    { id: 'fake', name: '1099 Lesson', icon: '📋', correct: false }
                 ],
                 deductions: [],
+                learned: ["W-2 = employee income, 1099 = contractor income", "Don't file forms you don't need"],
                 refund: 350,
                 time: 60
             },
             3: {
                 name: "Taylor Kim",
-                story: "Taylor is a freelance designer with $4,500 on a 1099. No taxes were withheld - this is different!",
+                job: "Freelance Designer",
+                avatar: "🎨",
+                story: "Taylor made $4,500 designing logos and received a 1099-NEC. Unlike a W-2, no taxes were taken out. This means Taylor owes taxes on ALL of this income!",
                 docs: [
                     { id: '1099', name: '1099-NEC', icon: '🎨', correct: true },
                     { id: 'fake', name: 'W-2 Form', icon: '📄', correct: false }
                 ],
                 deductions: [],
+                learned: ["1099 income has ZERO tax withheld", "Save 25-30% of 1099 income for taxes"],
                 refund: 0,
                 time: 60
             },
             4: {
                 name: "Jordan Chen",
-                story: "Jordan has a coffee shop job ($8,500 W-2) AND freelance photos ($3,200 1099). Bought a $1,200 camera.",
+                job: "Barista + Photographer",
+                avatar: "☕",
+                story: "Jordan has a coffee shop job ($8,500 W-2) AND freelance photography income ($3,200 on 1099). They bought a $1,200 camera for the business. What can they deduct?",
                 docs: [
                     { id: 'w2', name: 'W-2 Coffee', icon: '☕', correct: true },
                     { id: '1099', name: '1099 Photo', icon: '📷', correct: true }
                 ],
                 deductions: [
-                    { id: 'cam', name: 'Camera', desc: 'Business equipment $1,200', amount: 1200, correct: true },
-                    { id: 'coffee', name: 'Coffee', desc: 'Daily coffee $450', amount: 450, correct: false, audit: true }
+                    { id: 'cam', name: 'Camera Equipment', desc: 'Business equipment $1,200', amount: 1200, correct: true },
+                    { id: 'coffee', name: 'Daily Coffee', desc: 'Personal expense $450', amount: 450, correct: false, audit: true }
                 ],
+                learned: ["Business equipment is deductible", "Personal expenses are NEVER deductible"],
                 refund: 0,
                 time: 90
             },
             5: {
                 name: "Riley Park",
-                story: "Riley tutors math ($5,000 1099) and drove 600 miles between students. Learn the mileage deduction!",
+                job: "Math Tutor",
+                avatar: "📚",
+                story: "Riley tutors math and made $5,000 on a 1099. They drove 600 miles between student houses. Learn how business mileage can save money on taxes!",
                 docs: [{ id: '1099', name: '1099 Tutoring', icon: '📚', correct: true }],
                 deductions: [
-                    { id: 'miles', name: 'Mileage', desc: '600 miles x $0.67', amount: 402, correct: true },
-                    { id: 'commute', name: 'Commute', desc: 'Home to work', amount: 850, correct: false, audit: true }
+                    { id: 'miles', name: 'Business Mileage', desc: '600 miles × $0.67/mile', amount: 402, correct: true },
+                    { id: 'commute', name: 'Home Commute', desc: 'Personal travel $850', amount: 850, correct: false, audit: true }
                 ],
+                learned: ["Business mileage is deductible at 67¢/mile", "Commuting from home is NOT deductible"],
                 refund: 0,
                 time: 90
             },
             6: {
                 name: "Casey Blake",
-                story: "Casey has $12,000 in 1099 income. Some deductions look suspicious. Learn to spot red flags!",
+                job: "Social Media Manager",
+                avatar: "📱",
+                story: "Casey has $12,000 in 1099 income. Some deduction claims look suspicious. Learn to spot the red flags that trigger IRS audits!",
                 docs: [{ id: '1099', name: '1099 Income', icon: '📱', correct: true }],
                 deductions: [
-                    { id: 'phone', name: 'Phone 60%', desc: 'Business use $540', amount: 540, correct: true },
-                    { id: 'round', name: 'Round Numbers', desc: 'Exactly $1,000 x3', amount: 3000, correct: false, audit: true },
-                    { id: 'clothes', name: 'Work Clothes', desc: 'Regular clothes $800', amount: 800, correct: false, audit: true }
+                    { id: 'phone', name: 'Phone (60% business)', desc: 'Legitimate deduction $540', amount: 540, correct: true },
+                    { id: 'round', name: 'Round Numbers', desc: 'Exactly $1,000 × 3 = $3,000', amount: 3000, correct: false, audit: true },
+                    { id: 'clothes', name: 'Work Clothes', desc: 'Regular clothing $800', amount: 800, correct: false, audit: true }
                 ],
+                learned: ["Round numbers are audit red flags", "Regular clothes are not deductible"],
                 refund: 0,
                 time: 90
             },
             7: {
                 name: "Sam Torres",
-                story: "Sam drives Uber ($18,000) and DoorDash ($8,500). Multiple 1099s and vehicle expenses!",
+                job: "Gig Worker",
+                avatar: "🚗",
+                story: "Sam drives Uber ($18,000) and delivers DoorDash ($8,500). That's TWO 1099s! Plus vehicle expenses. Learn to handle multiple income sources.",
                 docs: [
                     { id: 'uber', name: '1099-K Uber', icon: '🚗', correct: true },
                     { id: 'dd', name: '1099-NEC DD', icon: '🍔', correct: true }
                 ],
                 deductions: [
-                    { id: 'vehicle', name: 'Vehicle', desc: 'Standard mileage', amount: 4200, correct: true },
-                    { id: 'meals', name: 'All Meals', desc: 'Personal food', amount: 2400, correct: false, audit: true }
+                    { id: 'vehicle', name: 'Vehicle Expenses', desc: 'Standard mileage deduction', amount: 4200, correct: true },
+                    { id: 'meals', name: 'Personal Meals', desc: 'Not a business expense', amount: 2400, correct: false, audit: true }
                 ],
+                learned: ["Multiple gig apps = multiple 1099s", "Vehicle expenses are huge for gig workers"],
                 refund: 0,
                 time: 105
             },
             8: {
                 name: "Jordan Lee",
-                story: "Jordan traded crypto and LOST $2,000. Learn how losses can actually HELP your taxes!",
-                docs: [{ id: 'crypto', name: '1099-B Crypto', icon: '₿', correct: true }],
+                job: "Crypto Trader",
+                avatar: "💎",
+                story: "Jordan traded crypto and LOST $2,000. They have a 1099-B from the exchange. Learn how capital losses can actually REDUCE your tax bill!",
+                docs: [{ id: 'crypto', name: '1099-B Crypto', icon: '💎', correct: true }],
                 deductions: [
-                    { id: 'loss', name: 'Crypto Loss', desc: 'Deduct up to $3,000', amount: 2000, correct: true },
-                    { id: 'ignore', name: 'Hide Loss', desc: 'Do not report', amount: 0, correct: false, audit: true }
+                    { id: 'loss', name: 'Capital Loss', desc: 'Deduct up to $3,000/year', amount: 2000, correct: true },
+                    { id: 'ignore', name: 'Hide the Loss', desc: 'IRS knows about this!', amount: 0, correct: false, audit: true }
                 ],
+                learned: ["Crypto losses can offset other income", "Always report crypto - exchanges tell the IRS"],
                 refund: 0,
                 time: 90
             },
             9: {
-                name: "Alex Rivera (Graduated)",
-                story: "The ultimate test! Alex has W-2 income, 1099 design work, crypto losses, and drove 800 miles.",
+                name: "Alex Rivera",
+                job: "The Ultimate Test",
+                avatar: "🏆",
+                story: "Alex graduated and now has it ALL: lifeguard W-2, design 1099, crypto losses, AND 800 miles of business driving. The final challenge!",
                 docs: [
                     { id: 'w2', name: 'W-2 Pool', icon: '🏊', correct: true },
                     { id: '1099', name: '1099 Design', icon: '💻', correct: true },
-                    { id: 'crypto', name: '1099-B Crypto', icon: '₿', correct: true }
+                    { id: 'crypto', name: '1099-B Crypto', icon: '💎', correct: true }
                 ],
                 deductions: [
-                    { id: 'miles', name: 'Mileage', desc: '800 miles', amount: 536, correct: true },
+                    { id: 'miles', name: 'Mileage', desc: '800 business miles', amount: 536, correct: true },
                     { id: 'laptop', name: 'Laptop', desc: '$1,200 for work', amount: 1200, correct: true },
-                    { id: 'crypto', name: 'Crypto Loss', desc: '$1,500 loss', amount: 1500, correct: true },
-                    { id: 'office', name: 'Home Office', desc: '20% of rent', amount: 2400, correct: false, audit: true }
+                    { id: 'crypto', name: 'Crypto Loss', desc: '$1,500 capital loss', amount: 1500, correct: true },
+                    { id: 'office', name: 'Home Office', desc: 'Questionable claim', amount: 2400, correct: false, audit: true }
                 ],
+                learned: ["Complex returns combine multiple income types", "When unsure, skip questionable deductions"],
                 refund: 0,
                 time: 120
             }
         };
 
-        // GAME STATE
-        let state = {
-            score: 0,
-            unlocked: [1, 2, 3],
-            completed: [],
-            current: null,
-            selectedDocs: new Set(),
-            selectedDeducts: new Set(),
-            timer: null,
-            timeLeft: 0
-        };
+        // STATE
+        let state = { score: 0, unlocked: [1,2,3], completed: [], current: null, selectedDocs: new Set(), selectedDeducts: new Set(), timer: null, timeLeft: 0 };
 
-        // INITIALIZE
         function init() {
             renderLevels();
-            setupEventListeners();
+            document.getElementById('fileBtn').onclick = fileReturn;
+            document.getElementById('continueBtn').onclick = () => { renderLevels(); showScreen('homeScreen'); };
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
         function renderLevels() {
             const list = document.getElementById('levelsList');
             list.innerHTML = '';
+            
+            // Update progress bar
+            const progress = (state.completed.length / 9) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
             
             for (let i = 1; i <= 9; i++) {
                 const lvl = LEVELS[i];
@@ -423,16 +801,19 @@
                 const completed = state.completed.includes(i);
                 
                 const card = document.createElement('div');
-                card.className = 'level-card' + (locked ? ' locked' : '');
-                if (!locked) {
-                    card.onclick = () => startLevel(i);
-                }
+                card.className = 'level-card' + (locked ? ' locked' : '') + (completed ? ' completed' : '');
+                
+                const badge = completed ? '✓ Done' : (locked ? '🔒 Locked' : `#${i}`);
+                const dots = [1,2,3].map((d, idx) => `<div class="dot ${idx < (i <= 2 ? 1 : i <= 5 ? 2 : 3) ? 'active' : ''} ${completed ? 'completed' : ''}"></div>`).join('');
                 
                 card.innerHTML = `
-                    <span class="level-num">${completed ? '✓' : '#' + i}</span>
+                    <span class="level-badge">${badge}</span>
                     <h3>${lvl.name}</h3>
-                    <p>${lvl.story.substring(0, 60)}...</p>
+                    <p>${lvl.story.substring(0, 80)}...</p>
+                    <div class="difficulty">${dots}</div>
                 `;
+                
+                if (!locked) card.onclick = () => startLevel(i);
                 list.appendChild(card);
             }
         }
@@ -443,11 +824,13 @@
             state.selectedDeducts.clear();
             const lvl = LEVELS[n];
             
-            // Setup screen
+            document.getElementById('levelNum').textContent = `Level ${n}`;
+            document.getElementById('clientAvatar').textContent = lvl.avatar;
             document.getElementById('clientName').textContent = lvl.name;
+            document.getElementById('clientJob').textContent = lvl.job;
             document.getElementById('clientStory').textContent = lvl.story;
             
-            // Docs
+            // Render docs
             const docsList = document.getElementById('docsList');
             docsList.innerHTML = '';
             lvl.docs.forEach(doc => {
@@ -456,46 +839,40 @@
                 div.innerHTML = `<div class="icon">${doc.icon}</div><div class="name">${doc.name}</div>`;
                 div.onclick = () => {
                     div.classList.toggle('selected');
-                    if (state.selectedDocs.has(doc.id)) {
-                        state.selectedDocs.delete(doc.id);
-                    } else {
-                        state.selectedDocs.add(doc.id);
-                    }
+                    state.selectedDocs.has(doc.id) ? state.selectedDocs.delete(doc.id) : state.selectedDocs.add(doc.id);
+                    updateDocCount();
                 };
                 docsList.appendChild(div);
             });
+            updateDocCount();
             
-            // Deductions
+            // Render deductions
             const deductList = document.getElementById('deductList');
-            const deductTitle = document.getElementById('deductTitle');
+            const deductHeader = document.getElementById('deductHeader');
             deductList.innerHTML = '';
             
-            if (lvl.deductions.length > 0) {
-                deductTitle.style.display = 'block';
+            if (lvl.deductions.length) {
+                deductHeader.style.display = 'flex';
                 lvl.deductions.forEach(d => {
                     const div = document.createElement('div');
-                    div.className = 'deduction-item' + (d.audit ? ' audit' : '');
+                    div.className = 'deduction-card' + (d.audit ? ' audit' : '');
                     div.innerHTML = `
-                        <div class="check"></div>
+                        <div class="check-circle">✓</div>
                         <div class="deduction-info">
                             <h4>${d.name}</h4>
                             <p>${d.desc}</p>
-                            <div class="audit-warning">⚠️ Audit risk!</div>
+                            <div class="audit-tag">⚠️ Audit risk!</div>
                         </div>
-                        <div class="deduction-amt">$${d.amount}</div>
+                        <div class="deduction-amt">$${d.amount.toLocaleString()}</div>
                     `;
                     div.onclick = () => {
                         div.classList.toggle('selected');
-                        if (state.selectedDeducts.has(d.id)) {
-                            state.selectedDeducts.delete(d.id);
-                        } else {
-                            state.selectedDeducts.add(d.id);
-                        }
+                        state.selectedDeducts.has(d.id) ? state.selectedDeducts.delete(d.id) : state.selectedDeducts.add(d.id);
                     };
                     deductList.appendChild(div);
                 });
             } else {
-                deductTitle.style.display = 'none';
+                deductHeader.style.display = 'none';
             }
             
             // Timer
@@ -505,75 +882,68 @@
             state.timer = setInterval(() => {
                 state.timeLeft--;
                 updateTimer();
-                if (state.timeLeft <= 0) {
-                    clearInterval(state.timer);
-                    fileReturn();
-                }
+                if (state.timeLeft <= 0) { clearInterval(state.timer); fileReturn(); }
             }, 1000);
             
             showScreen('gameScreen');
         }
 
+        function updateDocCount() {
+            const lvl = LEVELS[state.current];
+            const needed = lvl.docs.filter(d => d.correct).length;
+            const selected = Array.from(state.selectedDocs).filter(id => lvl.docs.find(d => d.id === id)?.correct).length;
+            document.getElementById('docCount').textContent = `${selected}/${needed} selected`;
+        }
+
         function updateTimer() {
             const pct = (state.timeLeft / LEVELS[state.current].time) * 100;
-            document.getElementById('timerFill').style.width = pct + '%';
+            const fill = document.getElementById('timerFill');
+            fill.style.width = pct + '%';
+            fill.className = 'timer-fill' + (pct < 20 ? ' warning' : '');
         }
 
         function fileReturn() {
             if (state.timer) clearInterval(state.timer);
             const lvl = LEVELS[state.current];
             
-            // Calculate score
-            let score = 0;
-            let correctDocs = 0;
-            let correctDeducts = 0;
-            let auditRisk = 0;
+            let score = 0, correctDocs = 0, correctDeducts = 0, auditRisk = 0;
             
-            // Check docs
             lvl.docs.forEach(d => {
-                if (d.correct && state.selectedDocs.has(d.id)) {
-                    score += 100;
-                    correctDocs++;
-                } else if (!d.correct && state.selectedDocs.has(d.id)) {
-                    score -= 50;
-                    auditRisk++;
-                }
+                if (d.correct && state.selectedDocs.has(d.id)) { score += 100; correctDocs++; }
+                else if (!d.correct && state.selectedDocs.has(d.id)) { score -= 50; auditRisk++; }
             });
             
-            // Check deductions
             lvl.deductions.forEach(d => {
-                if (d.correct && state.selectedDeducts.has(d.id)) {
-                    score += 50;
-                    correctDeducts++;
-                } else if (!d.correct && state.selectedDeducts.has(d.id)) {
-                    score -= 100;
-                    auditRisk += 2;
-                }
+                if (d.correct && state.selectedDeducts.has(d.id)) { score += 50; correctDeducts++; }
+                else if (!d.correct && state.selectedDeducts.has(d.id)) { score -= 100; auditRisk += 2; }
             });
             
-            // Time bonus
-            score += state.timeLeft * 2;
+            const timeBonus = state.timeLeft * 2;
+            score += timeBonus;
             
-            // Results
             const audited = auditRisk >= 2;
-            let status = 'Perfect!';
-            if (audited) status = 'AUDIT!';
-            else if (score < 100) status = 'Incomplete';
+            const passed = !audited && score > 0;
             
-            document.getElementById('resStatus').textContent = status;
-            document.getElementById('resStatus').className = 'result-value ' + (audited ? 'bad' : 'good');
+            // Update results
+            document.getElementById('resultIcon').textContent = audited ? '⚠️' : passed ? '🎉' : '❌';
+            document.getElementById('resultTitle').textContent = audited ? 'Audit Triggered!' : passed ? 'Return Filed!' : 'Incomplete';
+            document.getElementById('resultSub').textContent = audited ? 'The IRS wants to review this return' : passed ? 'Great work helping your client' : 'Some required items were missing';
+            
+            const statusEl = document.getElementById('resStatus');
+            statusEl.textContent = audited ? 'Under Review' : passed ? 'Approved' : 'Rejected';
+            statusEl.className = 'result-value ' + (audited ? 'danger' : passed ? 'success' : 'warning');
+            
             document.getElementById('resDocs').textContent = `${correctDocs}/${lvl.docs.filter(d => d.correct).length}`;
-            document.getElementById('resDeduct').textContent = `$${correctDeducts * 100}`;
+            document.getElementById('resDeduct').textContent = `$${correctDeducts * 50}`;
             document.getElementById('resRefund').textContent = `$${audited ? Math.floor(lvl.refund * 0.5) : lvl.refund}`;
+            document.getElementById('resTime').textContent = `+${timeBonus}`;
             document.getElementById('resScore').textContent = Math.max(0, score);
             
-            // Save progress
-            if (!audited && !state.completed.includes(state.current)) {
+            // Save
+            if (passed && !state.completed.includes(state.current)) {
                 state.completed.push(state.current);
                 const next = state.current + 1;
-                if (next <= 9 && !state.unlocked.includes(next)) {
-                    state.unlocked.push(next);
-                }
+                if (next <= 9 && !state.unlocked.includes(next)) state.unlocked.push(next);
             }
             state.score += Math.max(0, score);
             document.getElementById('totalScore').textContent = state.score;
@@ -581,20 +951,6 @@
             showScreen('resultScreen');
         }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function setupEventListeners() {
-            document.getElementById('fileBtn').onclick = fileReturn;
-            document.getElementById('continueBtn').onclick = () => {
-                renderLevels();
-                showScreen('homeScreen');
-            };
-        }
-
-        // START
         init();
     </script>
 </body>
