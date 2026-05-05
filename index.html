@@ -1044,7 +1044,7 @@
         }
 
         @keyframes splashFade {
-            to { opacity: 0; visibility: hidden; }
+            to { opacity: 0; visibility: hidden; pointer-events: none; z-index: -1; }
         }
 
         .splash-logo {
@@ -2448,19 +2448,30 @@
         }
 
         function loadProgress() {
-            const saved = localStorage.getItem('taxHeroProgress');
-            if (saved) {
-                const data = JSON.parse(saved);
-                gameState.totalScore = data.totalScore || 0;
-                gameState.unlockedLevels = data.unlockedLevels || [1];
-                gameState.completedLevels = data.completedLevels || [];
+            // Clear any corrupt localStorage
+            try {
+                const saved = localStorage.getItem('taxHeroProgress');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    gameState.totalScore = data.totalScore || 0;
+                    gameState.unlockedLevels = data.unlockedLevels || [1];
+                    gameState.completedLevels = data.completedLevels || [];
+                }
+            } catch (e) {
+                console.log('Resetting progress due to error');
+                localStorage.removeItem('taxHeroProgress');
+                localStorage.removeItem('taxHeroGlossary');
             }
             document.getElementById('totalScore').textContent = gameState.totalScore;
             
             // Load glossary progress
             const glossarySaved = localStorage.getItem('taxHeroGlossary');
             if (glossarySaved) {
-                taxKnowledge.unlocked = JSON.parse(glossarySaved);
+                try {
+                    taxKnowledge.unlocked = JSON.parse(glossarySaved);
+                } catch (e) {
+                    taxKnowledge.unlocked = [];
+                }
             }
         }
 
@@ -2488,7 +2499,11 @@
 
         // Level Management
         function startLevel(levelNum) {
-            if (!gameState.unlockedLevels.includes(levelNum)) return;
+            console.log('Clicked level:', levelNum, 'Unlocked:', gameState.unlockedLevels);
+            if (!gameState.unlockedLevels.includes(levelNum)) {
+                console.log('Level locked!');
+                return;
+            }
             
             gameState.currentLevel = levelNum;
             gameState.levelData = levels[levelNum];
@@ -3021,6 +3036,14 @@
                 }, i * 30);
             }
         }
+
+        // Hide splash screen after animation (fallback)
+        setTimeout(() => {
+            const splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.style.display = 'none';
+            }
+        }, 3000);
 
         // Start
         init();
