@@ -1026,6 +1026,82 @@
         @keyframes splashLoad {
             to { width: 100%; }
         }
+
+        /* Tutorial Overlay */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .tutorial-overlay.active {
+            display: flex;
+        }
+
+        .tutorial-box {
+            background: var(--panel);
+            border: 2px solid var(--cyan);
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 360px;
+            text-align: center;
+            animation: tutorialPop 0.4s ease;
+        }
+
+        @keyframes tutorialPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .tutorial-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .tutorial-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+        }
+
+        .tutorial-button {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Level Progress Indicator */
+        .level-progress {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--cyan);
+            z-index: 100;
+            display: none;
+        }
+
+        .level-progress.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -1067,11 +1143,12 @@
                 <p class="hero-subtitle">Master tax filing the fun way!</p>
             </div>
 
+            <div style="font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;">📚 Chapter 1: First Job Basics</div>
             <div class="levels-grid">
                 <div class="level-card" data-level="1" onclick="startLevel(1)">
                     <div class="level-number">1</div>
-                    <h3 class="level-title">Summer Job Hero</h3>
-                    <p class="level-desc">Simple W-2 • MoneyBot Basics</p>
+                    <h3 class="level-title">First Paycheck</h3>
+                    <p class="level-desc">Your first W-2 • Tutorial</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot"></div>
@@ -1081,8 +1158,33 @@
 
                 <div class="level-card" data-level="2" id="level2Card">
                     <div class="level-number">2</div>
-                    <h3 class="level-title">Side Hustle Solver</h3>
-                    <p class="level-desc">W-2 + 1099 • Deductions Unlocked</p>
+                    <h3 class="level-title">W-2 vs 1099</h3>
+                    <p class="level-desc">Know the difference</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">💼 Chapter 2: Self-Employment</div>
+            <div class="levels-grid">
+                <div class="level-card" data-level="3" id="level3Card">
+                    <div class="level-number">3</div>
+                    <h3 class="level-title">First 1099</h3>
+                    <p class="level-desc">No withholding = Save 30%</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                </div>
+
+                <div class="level-card" data-level="4" id="level4Card">
+                    <div class="level-number">4</div>
+                    <h3 class="level-title">Your First Deduction</h3>
+                    <p class="level-desc">Business equipment</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot active"></div>
@@ -1090,10 +1192,60 @@
                     </div>
                 </div>
 
-                <div class="level-card" data-level="3" id="level3Card">
-                    <div class="level-number">3</div>
-                    <h3 class="level-title">Gig Economy Chaos</h3>
-                    <p class="level-desc">Multi-Income • Audit Risk Master</p>
+                <div class="level-card" data-level="5" id="level5Card">
+                    <div class="level-number">5</div>
+                    <h3 class="level-title">Mileage Mastery</h3>
+                    <p class="level-desc">Track miles, save money</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--magenta); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">⚠️ Chapter 3: Avoid Trouble</div>
+            <div class="levels-grid">
+                <div class="level-card" data-level="6" id="level6Card">
+                    <div class="level-number">6</div>
+                    <h3 class="level-title">Audit Alert</h3>
+                    <p class="level-desc">Spot red flags</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; font-weight: 700;">🏆 Chapter 4: Advanced</div>
+            <div class="levels-grid">
+                <div class="level-card" data-level="7" id="level7Card">
+                    <div class="level-number">7</div>
+                    <h3 class="level-title">Gig Worker Pro</h3>
+                    <p class="level-desc">Uber + DoorDash</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                </div>
+
+                <div class="level-card" data-level="8" id="level8Card">
+                    <div class="level-number">8</div>
+                    <h3 class="level-title">Crypto Taxes</h3>
+                    <p class="level-desc">Losses can help!</p>
+                    <div class="level-difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                </div>
+
+                <div class="level-card" data-level="9" id="level9Card">
+                    <div class="level-number">9</div>
+                    <h3 class="level-title">Tax Master</h3>
+                    <p class="level-desc">The ultimate test</p>
                     <div class="level-difficulty">
                         <div class="difficulty-dot active"></div>
                         <div class="difficulty-dot active"></div>
@@ -1259,6 +1411,18 @@
         <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
     </div>
 
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-box">
+            <div class="tutorial-icon" id="tutorialIcon">👋</div>
+            <p class="tutorial-text" id="tutorialText">Welcome to Tax Season Hero!</p>
+            <button class="tutorial-button" onclick="nextTutorialStep()">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Level Progress -->
+    <div class="level-progress" id="levelProgress">Level 1 of 9</div>
+
     <!-- Modal -->
     <div class="modal-overlay" id="modal">
         <div class="modal">
@@ -1284,7 +1448,9 @@
             maxTime: 0,
             selectedDocs: new Set(),
             selectedDeductions: new Set(),
-            levelData: null
+            levelData: null,
+            tutorialStep: 0,
+            tutorialActive: false
         };
 
         // Level Data
@@ -1345,11 +1511,50 @@
         const levels = {
             1: {
                 client: {
+                    name: "Maya Johnson",
+                    job: "First Job Ever",
+                    avatar: "👋",
+                    story: "Maya just got her first paycheck from the local ice cream shop! She's confused about why her check is smaller than expected. Help her understand her W-2 and file her first return."
+                },
+                documents: [
+                    { 
+                        id: "w2", 
+                        name: "W-2 Form", 
+                        icon: "🍦", 
+                        desc: "Ice cream shop wages",
+                        learnMore: {
+                            what: "A W-2 shows what you earned and what tax was already taken out.",
+                            keyBoxes: "Box 1: Total pay. Box 2: Tax already paid (withholding).",
+                            whySmaller: "Your employer takes out tax before you get paid - that's withholding!"
+                        }
+                    }
+                ],
+                deductions: [],
+                correctDocs: ["w2"],
+                tips: [
+                    "Your first job? You get a W-2 in January showing what you earned.",
+                    "Made under $13,850? You probably get ALL your withholding back!"
+                ],
+                learned: [
+                    "W-2 forms show your wages and taxes withheld",
+                    "Withholding is money taken from paychecks for taxes",
+                    "First jobs often result in refunds because you overpaid"
+                ],
+                baseRefund: 280,
+                timeLimit: 90,
+                tutorial: true,
+                tutorialSteps: [
+                    { target: "documentsGrid", text: "👆 TAP the W-2 form to select it. This is the ONLY document Maya has." },
+                    { target: "fileButton", text: "👆 Now tap FILE RETURN to submit Maya's taxes!" }
+                ]
+            },
+            2: {
+                client: {
                     name: "Alex Rivera",
                     job: "Lifeguard",
                     avatar: "🏊",
-                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld for federal taxes. First time filing! No other income or complications.",
-                    learningGoal: "Learn what a W-2 is and why first-time filers often get refunds."
+                    story: "Alex worked as a lifeguard at the community pool last summer. Made $4,200 and had $350 withheld. But wait - he also got something called a 1099 in the mail...",
+                    learningGoal: "Learn the difference between W-2 and 1099 income."
                 },
                 documents: [
                     { 
@@ -1358,39 +1563,539 @@
                         icon: "📄", 
                         desc: "Wages from pool job",
                         learnMore: {
-                            what: "A W-2 shows your total wages and how much tax your employer already paid for you.",
-                            boxes: "Box 1 = total wages. Box 2 = federal tax withheld. These are the important ones!",
-                            studentContext: "Summer jobs, part-time work, internships - if you're an employee, you get a W-2."
+                            what: "Alex was an EMPLOYEE at the pool. He gets a W-2.",
+                            keyPoint: "Employers take out taxes for employees. Alex already paid some tax!"
                         }
                     },
                     { 
                         id: "1099", 
                         name: "1099-NEC", 
                         icon: "📋", 
-                        desc: "Contractor income", 
+                        desc: "Swimming lessons", 
                         fake: true,
                         learnMore: {
-                            what: "1099-NEC is for independent contractors, not employees.",
-                            whyFake: "Alex was a lifeguard (employee), not a contractor. He got a W-2, not a 1099.",
-                            keyDifference: "Employees get W-2s. Contractors get 1099s. The difference matters for taxes owed."
+                            whyFake: "Alex taught one private lesson but didn't earn enough ($600+) for a 1099.",
+                            keyPoint: "1099s are for contractors. Alex was mostly an employee (W-2).",
+                            rule: "You need $600+ in non-employee income to get a 1099."
                         }
                     }
                 ],
                 deductions: [],
                 correctDocs: ["w2"],
                 tips: [
-                    "First time filing? You probably don't owe anything if you made under $13,850!",
-                    "W-2 means you're an employee. Your employer already withheld taxes for you."
+                    "One W-2 = employee job. Taxes already withheld.",
+                    "1099 = contractor income. No taxes taken out!"
                 ],
                 learned: [
-                    "W-2 forms show wages from employer jobs",
-                    "If you made under $13,850 as a dependent, you likely owe $0 federal tax",
-                    "Withholding is money taken from paychecks for taxes throughout the year",
-                    "First-time filers often get refunds because they overpaid"
+                    "W-2 = employee, taxes withheld. 1099 = contractor, no withholding.",
+                    "You need $600+ in contractor income to get a 1099",
+                    "Don't file forms you don't have!"
                 ],
                 baseRefund: 350,
                 timeLimit: 60
             },
+            3: {
+                client: {
+                    name: "Taylor Kim",
+                    job: "Freelance Designer",
+                    avatar: "🎨",
+                    story: "Taylor made $4,500 designing logos for small businesses. No W-2 - just a 1099. This is their ONLY income. Learn what 1099 means for taxes!",
+                    learningGoal: "Understand 1099 income and self-employment tax basics."
+                },
+                documents: [
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC", 
+                        icon: "🎨", 
+                        desc: "Design income $4,500",
+                        learnMore: {
+                            what: "Taylor is a CONTRACTOR, not an employee. No boss = no W-2.",
+                            keyPoint: "1099 = NO taxes were taken out. Taylor owes it ALL at tax time.",
+                            warning: "Self-employment tax = 15.3% on TOP of income tax!"
+                        }
+                    },
+                    { 
+                        id: "fake1", 
+                        name: "W-2 Form", 
+                        icon: "📄", 
+                        desc: "Employer wages", 
+                        fake: true,
+                        learnMore: {
+                            whyFake: "Taylor has no employer. Only clients who paid as contractors.",
+                            keyPoint: "No W-2 means you're on your own for taxes. Save 25-30%!"
+                        }
+                    }
+                ],
+                deductions: [],
+                correctDocs: ["1099"],
+                tips: [
+                    "1099 income = you're the boss. But you pay ALL the taxes.",
+                    "Set aside 25-30% of 1099 income for taxes!"
+                ],
+                learned: [
+                    "1099 income has ZERO withholding",
+                    "Self-employment tax is 15.3% extra",
+                    "Save 25-30% of all 1099 income for taxes",
+                    "No employer = you handle taxes yourself"
+                ],
+                baseRefund: 0,
+                timeBonus: false,
+                timeLimit: 75
+            },
+            4: {
+                client: {
+                    name: "Jordan Chen",
+                    job: "Barista + Photographer",
+                    avatar: "☕",
+                    story: "Jordan worked at a coffee shop (W-2: $8,500) AND did freelance photography (1099: $3,200). Bought a camera for the business. ONE deduction to learn."
+                },
+                documents: [
+                    { 
+                        id: "w2", 
+                        name: "W-2 Coffee Shop", 
+                        icon: "☕", 
+                        desc: "$8,500 wages",
+                        learnMore: {
+                            what: "Jordan's employee wages. Taxes already withheld.",
+                            impact: "But the 1099 income means Jordan still owes more tax."
+                        }
+                    },
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC Photo", 
+                        icon: "📷", 
+                        desc: "$3,200 freelance",
+                        learnMore: {
+                            what: "Jordan's side hustle income. No taxes withheld!",
+                            warning: "This $3,200 will be taxed heavily. But there's a way to reduce it..."
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "camera", 
+                        name: "Camera Equipment", 
+                        desc: "$1,200 for photo business", 
+                        amount: 1200, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Camera used ONLY for the photography business.",
+                            keyPoint: "Business expenses reduce your taxable income!",
+                            rule: "Equipment used exclusively for business = deductible."
+                        }
+                    },
+                    { 
+                        id: "coffee", 
+                        name: "Daily Coffee", 
+                        desc: "Personal expense", 
+                        amount: 450, 
+                        legit: false, 
+                        auditRisk: "Personal expenses aren't deductible!",
+                        learnMore: {
+                            whyInvalid: "Jordan's daily coffee is personal, not business.",
+                            keyPoint: "Personal ≠ Business. Keep them separate!",
+                            warning: "Claiming personal expenses triggers audits."
+                        }
+                    }
+                ],
+                correctDocs: ["w2", "1099"],
+                correctDeductions: ["camera"],
+                tips: [
+                    "Business equipment is deductible. Personal stuff is NOT.",
+                    "Camera for photos? Deductible. Coffee? Nope."
+                ],
+                learned: [
+                    "Business expenses reduce your taxable income",
+                    "Equipment used only for business is deductible",
+                    "Personal expenses are NEVER deductible",
+                    "W-2 + 1099 = you have both employee and self-employment income"
+                ],
+                baseRefund: 0,
+                timeLimit: 90
+            },
+            5: {
+                client: {
+                    name: "Riley Park",
+                    job: "Tutor + Driver",
+                    avatar: "🚗",
+                    story: "Riley tutors math ($5,000 on 1099) and drives for a tutoring company. Drove 600 miles between student houses. Learn the mileage deduction!"
+                },
+                documents: [
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC Tutoring", 
+                        icon: "📚", 
+                        desc: "$5,000 income",
+                        learnMore: {
+                            what: "Riley's tutoring income. No withholding!",
+                            keyPoint: "Riley drove between students - that's business mileage!"
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "miles", 
+                        name: "Mileage Deduction", 
+                        desc: "600 miles @ $0.67/mile", 
+                        amount: 402, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Driving between tutoring jobs is BUSINESS mileage.",
+                            keyPoint: "Standard rate: 67¢ per mile in 2024.",
+                            proTip: "Track EVERY trip! Apps like Everlance make this easy."
+                        }
+                    },
+                    { 
+                        id: "commute", 
+                        name: "Home to First Student", 
+                        desc: "Daily commute", 
+                        amount: 850, 
+                        legit: false, 
+                        auditRisk: "Commuting isn't deductible!",
+                        learnMore: {
+                            whyInvalid: "Driving from home to your first job is COMMUTING.",
+                            keyPoint: "Commuting = personal. Between jobs = business.",
+                            rule: "Home to work = not deductible. Work to work = deductible!"
+                        }
+                    }
+                ],
+                correctDocs: ["1099"],
+                correctDeductions: ["miles"],
+                tips: [
+                    "Track mileage between clients - it's deductible!",
+                    "Commuting from home doesn't count."
+                ],
+                learned: [
+                    "Business mileage between jobs is deductible",
+                    "Commuting from home is NOT deductible",
+                    "Standard mileage rate: 67¢/mile in 2024",
+                    "Use apps to track miles - don't guess!"
+                ],
+                baseRefund: 0,
+                timeLimit: 90
+            },
+            6: {
+                client: {
+                    name: "Casey Blake",
+                    job: "Social Media Manager",
+                    avatar: "📱",
+                    story: "Casey has 1099 income ($12,000) and wants to claim every deduction possible. Some are legit, some are RED FLAGS. Learn to spot audit risks!"
+                },
+                documents: [
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC", 
+                        icon: "📱", 
+                        desc: "$12,000 income",
+                        learnMore: {
+                            what: "Casey's social media management income.",
+                            warning: "High 1099 income + sketchy deductions = AUDIT RISK!"
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "phone", 
+                        name: "Phone (Business %)", 
+                        desc: "60% business use", 
+                        amount: 540, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Casey uses phone for client calls and posting.",
+                            keyPoint: "Estimate actual business %. Document your reasoning.",
+                            proTip: "Track usage for a week to get a realistic %."
+                        }
+                    },
+                    { 
+                        id: "roundnums", 
+                        name: ""Round" Expenses", 
+                        desc: "Exactly $1,000 each", 
+                        amount: 3000, 
+                        legit: false, 
+                        auditRisk: "Round numbers trigger audits!",
+                        learnMore: {
+                            whyInvalid: "Exactly $1,000 for three expenses? Too round.",
+                            keyPoint: "Real expenses aren't perfectly round.",
+                            warning: "This is a MAJOR audit red flag!"
+                        }
+                    },
+                    { 
+                        id: "clothes", 
+                        name: "Work Clothes", 
+                        desc: "Regular clothing", 
+                        amount: 800, 
+                        legit: false, 
+                        auditRisk: "Regular clothes aren't deductible!",
+                        learnMore: {
+                            whyInvalid: "Casey's normal clothes aren't deductible.",
+                            exception: "Only REQUIRED uniforms with logo OR safety gear.",
+                            warning: "Clothing deductions are heavily scrutinized."
+                        }
+                    }
+                ],
+                correctDocs: ["1099"],
+                correctDeductions: ["phone"],
+                tips: [
+                    "Round numbers = instant audit flag.",
+                    "Regular clothes aren't deductible. Be honest!"
+                ],
+                learned: [
+                    "Round numbers are an audit red flag",
+                    "Regular work clothes are NOT deductible",
+                    "Required uniforms with logos ARE deductible",
+                    "Be honest - audits are stressful and expensive"
+                ],
+                baseRefund: 0,
+                timeLimit: 90
+            },
+            7: {
+                client: {
+                    name: "Sam Torres",
+                    job: "Gig Worker",
+                    avatar: "🚗",
+                    story: "Sam drives Uber ($18,000) and delivers DoorDash ($8,500). Multiple 1099s! Plus vehicle expenses. Learn to handle gig economy taxes!"
+                },
+                documents: [
+                    { 
+                        id: "uber", 
+                        name: "1099-K Uber", 
+                        icon: "🚗", 
+                        desc: "$18,000 rideshare",
+                        learnMore: {
+                            what: "Uber reports GROSS payments (including Uber's cut).",
+                            keyPoint: "You'll deduct expenses to show actual profit.",
+                            warning: "1099-K numbers look scary - they're gross, not net!"
+                        }
+                    },
+                    { 
+                        id: "doordash", 
+                        name: "1099-NEC DD", 
+                        icon: "🍔", 
+                        desc: "$8,500 delivery",
+                        learnMore: {
+                            what: "DoorDash income. Another 1099 to track!",
+                            keyPoint: "Multiple gig apps = multiple 1099s."
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "vehicle", 
+                        name: "Vehicle Expenses", 
+                        desc: "Standard mileage", 
+                        amount: 4200, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Driving for Uber/DD requires a car. Biggest deduction!",
+                            twoMethods: "Standard mileage (67¢/mile) OR actual expenses.",
+                            proTip: "Track both all year, pick the bigger deduction!"
+                        }
+                    },
+                    { 
+                        id: "meals", 
+                        name: "All Meals", 
+                        desc: "Personal food", 
+                        amount: 2400, 
+                        legit: false, 
+                        auditRisk: "Only 50% of business meals!",
+                        learnMore: {
+                            whyInvalid: "Sam wants to deduct ALL meals. Nope!",
+                            rule: "Only BUSINESS meals, and only 50% deductible.",
+                            warning: "Personal meals are never deductible."
+                        }
+                    }
+                ],
+                correctDocs: ["uber", "doordash"],
+                correctDeductions: ["vehicle"],
+                tips: [
+                    "Multiple 1099s = track income from each app separately.",
+                    "Vehicle expenses are huge for gig workers. Track everything!"
+                ],
+                learned: [
+                    "Multiple gig apps = multiple 1099s",
+                    "1099-K shows gross payments, not profit",
+                    "Vehicle expenses: standard mileage OR actual costs",
+                    "Only business meals are 50% deductible"
+                ],
+                baseRefund: 0,
+                timeLimit: 105
+            },
+            8: {
+                client: {
+                    name: "Jordan Lee",
+                    job: "Crypto Trader",
+                    avatar: "₿",
+                    story: "Jordan traded crypto and lost $2,000. Has a 1099-B from the exchange. Learn how crypto losses actually HELP your taxes!"
+                },
+                documents: [
+                    { 
+                        id: "crypto", 
+                        name: "1099-B Crypto", 
+                        icon: "₿", 
+                        desc: "Trading activity",
+                        learnMore: {
+                            what: "Crypto is treated as PROPERTY by the IRS.",
+                            keyPoint: "Every trade/sale is a taxable event. But losses help!",
+                            silverLining: "Losses can offset gains AND up to $3,000 income!"
+                        }
+                    },
+                    { 
+                        id: "fake1", 
+                        name: "W-2", 
+                        icon: "📄", 
+                        desc: "Employer income", 
+                        fake: true,
+                        learnMore: {
+                            whyFake: "Jordan only traded crypto. No regular job.",
+                            keyPoint: "File what you have. Don't invent documents!"
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "cryptoloss", 
+                        name: "Crypto Losses", 
+                        desc: "Up to $3,000 deductible", 
+                        amount: 2000, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Capital losses are deductible just like stock losses.",
+                            keyPoint: "Up to $3,000 can offset regular income per year.",
+                            carryover: "Extra losses carry forward to next year!"
+                        }
+                    },
+                    { 
+                        id: "ignore", 
+                        name: "Ignore Crypto Loss", 
+                        desc: "Don't report it", 
+                        amount: 0, 
+                        legit: false, 
+                        auditRisk: "The IRS knows!",
+                        learnMore: {
+                            whyInvalid: "Exchanges report to the IRS. They KNOW about the trades.",
+                            keyPoint: "Not reporting = tax evasion. Big penalties.",
+                            warning: "Always report crypto. The IRS is watching."
+                        }
+                    }
+                ],
+                correctDocs: ["crypto"],
+                correctDeductions: ["cryptoloss"],
+                tips: [
+                    "Crypto losses can save you money on taxes!",
+                    "Exchanges report to the IRS - don't hide crypto activity."
+                ],
+                learned: [
+                    "Crypto is taxed as property (not currency)",
+                    "Every crypto trade/sale is a taxable event",
+                    "Crypto losses can offset up to $3,000 of regular income",
+                    "Exchanges report to the IRS - always report crypto"
+                ],
+                baseRefund: 0,
+                timeBonus: false,
+                timeLimit: 90
+            },
+            9: {
+                client: {
+                    name: "Alex Rivera (Advanced)",
+                    job: "The Full Picture",
+                    avatar: "🏆",
+                    story: "Alex is back! Now a senior in college with: lifeguard W-2 ($3,200), freelance web design 1099 ($8,500), crypto trading (lost $1,500), and drove 800 miles for clients. The ULTIMATE test!"
+                },
+                documents: [
+                    { 
+                        id: "w2", 
+                        name: "W-2 Pool", 
+                        icon: "🏊", 
+                        desc: "$3,200 wages",
+                        learnMore: {
+                            what: "Alex still lifeguards part-time. W-2 income.",
+                            keyPoint: "Employer already withheld some taxes."
+                        }
+                    },
+                    { 
+                        id: "1099", 
+                        name: "1099-NEC Design", 
+                        icon: "💻", 
+                        desc: "$8,500 freelance",
+                        learnMore: {
+                            what: "Alex's web design side hustle. Major income!",
+                            warning: "No withholding on this $8,500. Big tax bill incoming..."
+                        }
+                    },
+                    { 
+                        id: "crypto", 
+                        name: "1099-B Crypto", 
+                        icon: "₿", 
+                        desc: "Trading losses",
+                        learnMore: {
+                            what: "Alex dabbled in crypto and lost money.",
+                            keyPoint: "Losses can offset other income! Silver lining."
+                        }
+                    }
+                ],
+                deductions: [
+                    { 
+                        id: "miles", 
+                        name: "Mileage", 
+                        desc: "800 business miles", 
+                        amount: 536, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Driving to client meetings.",
+                            calculation: "800 miles × $0.67 = $536 deduction!"
+                        }
+                    },
+                    { 
+                        id: "laptop", 
+                        name: "Laptop", 
+                        desc: "$1,200 for design work", 
+                        amount: 1200, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Computer used for web design business.",
+                            keyPoint: "Business equipment is deductible."
+                        }
+                    },
+                    { 
+                        id: "crypto", 
+                        name: "Crypto Losses", 
+                        desc: "$1,500 capital loss", 
+                        amount: 1500, 
+                        legit: true,
+                        learnMore: {
+                            whyValid: "Capital losses offset other income.",
+                            keyPoint: "Up to $3,000 per year deductible!"
+                        }
+                    },
+                    { 
+                        id: "rent", 
+                        name: "Home Office", 
+                        desc: "20% of rent", 
+                        amount: 2400, 
+                        legit: false, 
+                        auditRisk: "Alex doesn't qualify!",
+                        learnMore: {
+                            whyInvalid: "Alex works from bedroom (personal use too).",
+                            keyPoint: "Home office must be REGULAR and EXCLUSIVE.",
+                            warning: "This is a major audit trigger. Skip it!"
+                        }
+                    }
+                ],
+                correctDocs: ["w2", "1099", "crypto"],
+                correctDeductions: ["miles", "laptop", "crypto"],
+                tips: [
+                    "Combine everything you've learned!",
+                    "When in doubt, leave sketchy deductions out."
+                ],
+                learned: [
+                    "Complex returns combine multiple income types",
+                    "Each income type has different tax rules",
+                    "When unsure, skip questionable deductions",
+                    "Honest filing > aggressive deductions"
+                ],
+                baseRefund: 0,
+                timeLimit: 120
+            }
             2: {
                 client: {
                     name: "Jordan Chen",
@@ -1710,6 +2415,11 @@
             gameState.levelData = levels[levelNum];
             gameState.selectedDocs.clear();
             gameState.selectedDeductions.clear();
+            gameState.tutorialStep = 0;
+            
+            // Show level progress
+            document.getElementById('levelProgress').textContent = `Level ${levelNum} of 9`;
+            document.getElementById('levelProgress').classList.add('active');
             
             // Setup game screen
             setupGameScreen();
@@ -1717,11 +2427,38 @@
             // Switch screens
             showScreen('gameScreen');
             
-            // Start timer
-            startTimer(gameState.levelData.timeLimit);
+            // Start tutorial if level has one
+            if (gameState.levelData.tutorial) {
+                gameState.tutorialActive = true;
+                showTutorialStep();
+            } else {
+                // Start timer
+                startTimer(gameState.levelData.timeLimit);
+                showRandomTip();
+            }
+        }
+
+        // Tutorial Functions
+        function showTutorialStep() {
+            const steps = gameState.levelData.tutorialSteps;
+            if (!steps || gameState.tutorialStep >= steps.length) {
+                // Tutorial done
+                document.getElementById('tutorialOverlay').classList.remove('active');
+                gameState.tutorialActive = false;
+                // Start timer
+                startTimer(gameState.levelData.timeLimit);
+                showRandomTip();
+                return;
+            }
             
-            // Show first tip
-            showRandomTip();
+            const step = steps[gameState.tutorialStep];
+            document.getElementById('tutorialText').textContent = step.text;
+            document.getElementById('tutorialOverlay').classList.add('active');
+        }
+
+        function nextTutorialStep() {
+            gameState.tutorialStep++;
+            showTutorialStep();
         }
 
         function setupGameScreen() {
@@ -2016,6 +2753,7 @@
         }
 
         function backToMenu() {
+            document.getElementById('levelProgress').classList.remove('active');
             updateLevelCards();
             showScreen('homeScreen');
         }
