@@ -1027,85 +1027,6 @@
             100% { opacity: 0; transform: translateY(-50px) scale(0); }
         }
 
-        /* MoneyBot Splash Screen */
-        .splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a0a2e 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            animation: splashFade 0.5s ease 2.5s forwards;
-        }
-
-        @keyframes splashFade {
-            to { opacity: 0; visibility: hidden; pointer-events: none; z-index: -1; }
-        }
-
-        .splash-logo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 80px rgba(0, 212, 255, 0.5);
-            animation: splashPulse 1.5s ease-in-out infinite;
-        }
-
-        .splash-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        @keyframes splashPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .splash-text {
-            margin-top: 24px;
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-        }
-
-        .splash-tagline {
-            margin-top: 8px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .splash-loading {
-            margin-top: 32px;
-            width: 120px;
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .splash-loading-bar {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            animation: splashLoad 2s ease forwards;
-        }
-
-        @keyframes splashLoad {
-            to { width: 100%; }
-        }
-
         /* Tutorial Overlay */
         .tutorial-overlay {
             position: fixed;
@@ -1184,18 +1105,6 @@
     </style>
 </head>
 <body>
-    <!-- MoneyBot Splash Screen -->
-    <div class="splash-screen" id="splashScreen">
-        <div class="splash-logo">
-            <img src="assets/moneybot-tax-coach.png" alt="MoneyBot">
-        </div>
-        <div class="splash-text">MONEYBOT</div>
-        <div class="splash-tagline">Learn Through Play</div>
-        <div class="splash-loading">
-            <div class="splash-loading-bar"></div>
-        </div>
-    </div>
-
     <div class="game-container">
         <!-- Header -->
         <header class="header">
@@ -3036,14 +2945,6 @@
                 }, i * 30);
             }
         }
-
-        // Hide splash screen after animation (fallback)
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            if (splash) {
-                splash.style.display = 'none';
-            }
-        }, 3000);
 
         // Start
         init();
