@@ -18,76 +18,114 @@
         }
 
         :root {
-            --cyan: #00D4FF;
-            --magenta: #FF00FF;
-            --gold: #FFD700;
-            --dark: #0a0a1a;
-            --darker: #050510;
-            --panel: rgba(20, 20, 40, 0.95);
+            /* Indie Tax Office Palette - Paper & Ink meets Neon */
+            --paper: #f5f3ef;
+            --paper-dark: #e8e4dc;
+            --ink: #1a1a2e;
+            --ink-light: #2d2d44;
+            --stamp-red: #c41e3a;
+            --stamp-red-glow: rgba(196, 30, 58, 0.3);
+            --highlight: #2563eb;
+            --highlight-glow: rgba(37, 99, 235, 0.2);
+            --money-green: #059669;
+            --warning-amber: #d97706;
+            --accent-purple: #7c3aed;
+            
+            /* Functional mapping */
+            --cyan: var(--highlight);
+            --magenta: var(--accent-purple);
+            --gold: var(--money-green);
+            --dark: var(--ink);
+            --darker: #0f0f1a;
+            --panel: var(--paper-dark);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        * {
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a0a2e 100%);
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--ink);
             min-height: 100vh;
-            color: white;
+            color: var(--ink);
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--highlight-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--stamp-red-glow) 0%, transparent 40%);
         }
 
         .game-container {
             max-width: 480px;
             margin: 0 auto;
-            padding: 16px;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header */
+        /* Header - Indie Document Style */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 16px;
+            background: var(--paper);
+            border-radius: 12px;
+            border: 2px solid var(--ink-light);
+            box-shadow: 4px 4px 0 var(--ink-light);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header::before {
+            content: 'TOP SECRET';
+            position: absolute;
+            top: -8px;
+            right: 16px;
+            background: var(--stamp-red);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 2px;
+            transform: rotate(-3deg);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            background: var(--ink);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            animation: pulse 2s infinite;
+            border: 2px solid var(--highlight);
         }
 
         .logo-icon img {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             object-fit: contain;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            filter: brightness(1.2);
         }
 
         .logo-text {
-            font-size: 18px;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--cyan), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.5px;
         }
 
         .score-display {
@@ -95,16 +133,18 @@
         }
 
         .score-label {
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.6);
+            color: var(--ink-light);
             letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .score-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--gold);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--money-green);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         /* Screens */
@@ -124,50 +164,51 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Home Screen */
+        /* Home Screen - Indie Style */
         .hero-section {
             text-align: center;
-            padding: 40px 0;
+            padding: 32px 0;
         }
 
         .hero-title {
-            font-size: 36px;
-            font-weight: 900;
+            font-size: 32px;
+            font-weight: 700;
             line-height: 1.1;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 8px;
+            color: var(--paper);
+            letter-spacing: -1px;
         }
 
         .hero-subtitle {
-            font-size: 16px;
-            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            color: rgba(245, 243, 239, 0.7);
             margin-bottom: 8px;
         }
 
         .moneybot-tagline {
-            font-size: 12px;
-            color: var(--cyan);
+            font-size: 11px;
+            color: var(--highlight);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .moneybot-mascot {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 24px;
-            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 0 60px rgba(0, 212, 255, 0.4);
-            animation: float 3s ease-in-out infinite;
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 3px solid var(--paper);
+            box-shadow: 6px 6px 0 var(--stamp-red);
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .moneybot-mascot:hover {
+            transform: rotate(0deg) scale(1.02);
         }
 
         .moneybot-mascot img {
@@ -176,115 +217,122 @@
             object-fit: cover;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
+        /* Level Cards - Case File Style */
         .levels-grid {
             display: grid;
             gap: 12px;
         }
 
         .level-card {
-            background: var(--panel);
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--paper);
+            border: 2px solid var(--ink-light);
+            border-radius: 8px;
+            padding: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
-            overflow: hidden;
+            box-shadow: 3px 3px 0 var(--ink-light);
         }
 
         .level-card:hover, .level-card:active {
-            border-color: var(--cyan);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+            border-color: var(--highlight);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink-light);
         }
 
         .level-card.locked {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            filter: grayscale(1);
         }
 
         .level-card.completed {
-            border-color: var(--gold);
+            border-color: var(--money-green);
+            background: linear-gradient(135deg, var(--paper) 0%, rgba(5, 150, 105, 0.1) 100%);
         }
 
         .level-number {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 32px;
-            height: 32px;
-            background: var(--cyan);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 14px;
-            color: var(--dark);
+            top: -10px;
+            left: 12px;
+            background: var(--ink);
+            color: var(--paper);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 1px;
         }
 
         .level-card.completed .level-number {
-            background: var(--gold);
+            background: var(--money-green);
         }
 
         .level-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 4px;
+            color: var(--ink);
+            padding-top: 8px;
         }
 
         .level-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            color: var(--ink-light);
         }
 
         .level-difficulty {
             display: flex;
             gap: 4px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .difficulty-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            width: 6px;
+            height: 6px;
+            border-radius: 2px;
+            background: var(--paper-dark);
         }
 
         .difficulty-dot.active {
-            background: var(--gold);
+            background: var(--stamp-red);
         }
 
-        /* Game Screen */
+        /* Game Screen - Indie Document Style */
         .timer-bar {
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin: 16px 0;
+            height: 8px;
+            background: var(--paper-dark);
+            border-radius: 4px;
+            margin: 20px 0;
             overflow: hidden;
+            border: 2px solid var(--ink-light);
         }
 
         .timer-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            border-radius: 3px;
+            background: var(--highlight);
+            border-radius: 2px;
             transition: width 1s linear;
         }
 
         .timer-fill.warning {
-            background: linear-gradient(90deg, #ff6b35, #ff0000);
+            background: var(--stamp-red);
+            animation: timerPulse 1s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .client-section {
-            background: var(--panel);
-            border-radius: 16px;
+            background: var(--paper);
+            border: 2px solid var(--ink-light);
+            border-radius: 8px;
             padding: 16px;
             margin-bottom: 16px;
+            box-shadow: 4px 4px 0 var(--ink-light);
         }
 
         .client-header {
@@ -295,54 +343,59 @@
         }
 
         .client-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            font-size: 24px;
+            background: var(--paper-dark);
+            border: 2px solid var(--ink-light);
         }
 
         .client-info h3 {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 2px;
+            color: var(--ink);
+            font-weight: 600;
         }
 
         .client-info p {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            color: var(--ink-light);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .client-story {
-            font-size: 14px;
-            line-height: 1.5;
-            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--ink);
             padding: 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            border-left: 3px solid var(--cyan);
+            background: var(--paper-dark);
+            border-radius: 6px;
+            border-left: 3px solid var(--highlight);
         }
 
         .moneybot-mission {
             margin-top: 12px;
             padding: 10px 14px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 255, 0.1));
-            border-radius: 10px;
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            background: var(--paper-dark);
+            border-radius: 6px;
+            border: 1px solid var(--highlight);
             font-size: 12px;
         }
 
         .mission-label {
-            color: var(--cyan);
-            font-weight: 700;
+            color: var(--highlight);
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-size: 10px;
         }
 
         .mission-text {
-            color: rgba(255,255,255,0.8);
+            color: var(--ink);
         }
 
         .documents-section {
@@ -350,11 +403,12 @@
         }
 
         .section-title {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 1px;
+            color: rgba(245, 243, 239, 0.6);
+            letter-spacing: 1.5px;
             margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .documents-grid {
@@ -364,33 +418,37 @@
         }
 
         .document-card {
-            background: var(--panel);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 16px;
+            background: var(--paper);
+            border: 2px solid var(--ink-light);
+            border-radius: 6px;
+            padding: 14px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
+            box-shadow: 2px 2px 0 var(--ink-light);
         }
 
         .document-card:hover {
-            border-color: var(--cyan);
-            transform: scale(1.02);
+            border-color: var(--highlight);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--ink-light);
         }
 
         .document-card.selected {
-            border-color: var(--gold);
-            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--money-green);
+            background: rgba(5, 150, 105, 0.1);
+            box-shadow: 2px 2px 0 var(--money-green);
         }
 
         .document-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
+            font-size: 28px;
+            margin-bottom: 6px;
         }
 
         .document-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
+            color: var(--ink);
         }
 
         .deductions-section {
@@ -398,47 +456,52 @@
         }
 
         .deduction-item {
-            background: var(--panel);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 14px;
+            background: var(--paper);
+            border: 2px solid var(--ink-light);
+            border-radius: 6px;
+            padding: 12px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
+            box-shadow: 2px 2px 0 var(--ink-light);
         }
 
         .deduction-item:hover {
-            border-color: var(--cyan);
+            border-color: var(--highlight);
+            transform: translate(-1px, -1px);
         }
 
         .deduction-item.selected {
-            border-color: var(--gold);
-            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--money-green);
+            background: rgba(5, 150, 105, 0.1);
+            box-shadow: 2px 2px 0 var(--money-green);
         }
 
         .deduction-item.audit-risk {
-            border-color: rgba(255, 0, 0, 0.5);
+            border-color: var(--stamp-red);
+            background: rgba(196, 30, 58, 0.05);
         }
 
         .deduction-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--ink-light);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             flex-shrink: 0;
+            color: transparent;
         }
 
         .deduction-item.selected .deduction-checkbox {
-            background: var(--gold);
-            border-color: var(--gold);
-            color: var(--dark);
+            background: var(--money-green);
+            border-color: var(--money-green);
+            color: white;
         }
 
         .deduction-info {
@@ -446,27 +509,30 @@
         }
 
         .deduction-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 2px;
+            color: var(--ink);
         }
 
         .deduction-desc {
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
+            font-size: 11px;
+            color: var(--ink-light);
         }
 
         .deduction-amount {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--gold);
+            color: var(--money-green);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .audit-warning {
-            font-size: 11px;
-            color: #ff6b35;
+            font-size: 10px;
+            color: var(--stamp-red);
             margin-top: 4px;
             display: none;
+            font-weight: 500;
         }
 
         .deduction-item.audit-risk .audit-warning {
@@ -474,56 +540,65 @@
         }
 
         .action-button {
-            background: linear-gradient(135deg, var(--cyan), var(--magenta));
-            border: none;
-            border-radius: 16px;
-            padding: 18px 32px;
-            font-size: 18px;
-            font-weight: 800;
-            color: white;
+            background: var(--ink);
+            border: 2px solid var(--ink-light);
+            border-radius: 8px;
+            padding: 16px 28px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--paper);
             cursor: pointer;
             width: 100%;
             margin-top: 16px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.15s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 4px 4px 0 var(--ink-light);
         }
 
         .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.4);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--highlight);
+            border-color: var(--highlight);
+        }
+
+        .action-button:active {
+            transform: translate(0, 0);
+            box-shadow: 2px 2px 0 var(--highlight);
         }
 
         .action-button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         /* MoneyBot Tip */
         .moneybot-tip {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 0, 255, 0.2));
-            border: 2px solid var(--cyan);
-            border-radius: 16px;
-            padding: 16px;
+            background: var(--paper);
+            border: 2px solid var(--highlight);
+            border-radius: 8px;
+            padding: 14px;
             margin: 16px 0;
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            animation: slideIn 0.4s ease;
+            animation: slideIn 0.3s ease;
+            box-shadow: 3px 3px 0 var(--ink-light);
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
+            from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
         .moneybot-tip-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             flex-shrink: 0;
-            border-radius: 50%;
+            border-radius: 6px;
             overflow: hidden;
+            border: 2px solid var(--ink-light);
         }
 
         .moneybot-tip-icon img {
@@ -533,15 +608,18 @@
         }
 
         .moneybot-tip-content h4 {
-            font-size: 14px;
-            color: var(--cyan);
+            font-size: 12px;
+            color: var(--highlight);
             margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .moneybot-tip-content p {
-            font-size: 13px;
-            line-height: 1.4;
-            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--ink);
         }
 
         /* Results Screen */
@@ -552,32 +630,34 @@
 
         .moneybot-branding-footer {
             text-align: center;
-            padding: 24px 0;
+            padding: 20px 0;
             margin-top: auto;
-            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            border-top: 1px solid var(--ink-light);
         }
 
         .moneybot-branding-footer img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             margin-bottom: 8px;
+            border: 1px solid var(--ink-light);
         }
 
         .moneybot-branding-text {
-            font-size: 11px;
-            color: rgba(255,255,255,0.4);
+            font-size: 10px;
+            color: rgba(245, 243, 239, 0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .moneybot-watermark {
             position: fixed;
             bottom: 16px;
             right: 16px;
-            width: 40px;
-            height: 40px;
-            opacity: 0.15;
+            width: 32px;
+            height: 32px;
+            opacity: 0.1;
             pointer-events: none;
             z-index: 0;
         }
@@ -585,37 +665,40 @@
         .moneybot-watermark img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            border-radius: 6px;
         }
 
         .result-icon {
-            font-size: 80px;
-            margin-bottom: 16px;
+            font-size: 64px;
+            margin-bottom: 12px;
         }
 
         .result-title {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 8px;
+            color: var(--paper);
         }
 
         .result-subtitle {
-            font-size: 16px;
-            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            color: rgba(245, 243, 239, 0.7);
         }
 
         .results-stats {
-            background: var(--panel);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--paper);
+            border: 2px solid var(--ink-light);
+            border-radius: 8px;
+            padding: 16px;
             margin-bottom: 16px;
+            box-shadow: 4px 4px 0 var(--ink-light);
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--paper-dark);
         }
 
         .stat-row:last-child {
@@ -623,25 +706,20 @@
         }
 
         .stat-label {
-            font-size: 14px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .stat-value {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 13px;
+            color: var(--ink-light);
         }
 
         .stat-value.positive {
-            color: #4ade80;
+            color: var(--money-green);
         }
 
         .stat-value.negative {
-            color: #ff6b35;
+            color: var(--stamp-red);
         }
 
         .stat-value.gold {
-            color: var(--gold);
+            color: var(--money-green);
         }
 
         /* Confetti */
